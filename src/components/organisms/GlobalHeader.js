@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 import MenuTools from "@mui/icons-material/ManageSearch";
 import { Button } from "@mui/joy";
 import {
@@ -13,7 +12,6 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { isBrowser } from "react-device-detect";
-import Logo from "../../assets/images/Logo_MESsie.svg";
 import DropMenu from "../templates/menus/DropMenu";
 import SideMenu from "../templates/menus/SideMenu";
 

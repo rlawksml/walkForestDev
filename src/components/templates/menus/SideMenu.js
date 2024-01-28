@@ -22,7 +22,6 @@ import AddIcon from "@mui/icons-material/Add";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import WebOutlinedIcon from "@mui/icons-material/WebOutlined";
-import Logo from "../../../assets/images/Logo_MESsie.svg";
 import styled from "styled-components";
 import { Typography } from "@mui/material";
 

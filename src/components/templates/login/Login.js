@@ -15,7 +15,6 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useState } from "react";
 import styled from "styled-components";
 
-import Logo from "../../../assets/images/Logo_MESsie.svg";
 import icon_google from "../../../assets/images/google.svg";
 import icon_close from "../../../assets/images/icon_close.svg";
 import icon_kakao from "../../../assets/images/kakao.svg";

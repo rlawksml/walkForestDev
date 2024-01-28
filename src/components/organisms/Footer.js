@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Logo from "../../assets/images/Logo_MESsie.svg";
 import { useNavigate } from "react-router-dom";
 
 export default function Footer({
@@ -51,9 +50,9 @@ export default function Footer({
             </button>
           </FooterNavItem>
         </FooterNav>
-        <div className="logoCt">
+        {/* <div className="logoCt">
           <img src={Logo} alt="MESsie"></img>
-        </div>
+        </div> */}
 
         <FooterInfo>
           <FooterInfoItem>
