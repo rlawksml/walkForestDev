@@ -9,7 +9,7 @@ import bgVideo from '../../../assets/images/bgVideo.mp4';
 export default function BannerTop() {
   return (
     <>
-      <BannerSection bg={bg}>
+      <BannerSection >
         <div className="BannerCt">
           <div className="textCt">
 

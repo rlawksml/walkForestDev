@@ -120,7 +120,6 @@ export default function UsesContent({ handleClickOpen }) {
           const isActive = categoryState === index;
           return (
             <CategoryItem
-              item
               key={index}
               variant="outlined"
               color="neutral"

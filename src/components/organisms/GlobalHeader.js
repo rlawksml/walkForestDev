@@ -15,7 +15,7 @@ import { isBrowser } from "react-device-detect";
 import DropMenu from "../templates/menus/DropMenu";
 import SideMenu from "../templates/menus/SideMenu";
 
-export default function GlobalHeader({ isLoggedIn, handleLoginPop }) {
+  export default function GlobalHeader ({isLoggedIn, handleLoginPop}){
   // 로그인 드랍 메뉴
   const [anchorEl, setAnchorEl] = useState(null);
   const DropOpen = Boolean(anchorEl);

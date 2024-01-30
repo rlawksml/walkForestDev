@@ -147,7 +147,6 @@ export default function AroundContent({ handleClickOpen }) {
           const isActive = categoryState === index;
           return (
             <CategoryItem
-              item
               key={index}
               variant="outlined"
               color="neutral"
