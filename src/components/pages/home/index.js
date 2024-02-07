@@ -1,18 +1,26 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import GlobalHeader from '../../organisms/GlobalHeader';
-import Login from '../../templates/login/Login';
-import Main from '../../templates/mainContent/Main';
-import { Container } from '@mui/material';
-import { isBrowser } from 'react-device-detect';
-import axios from 'axios';
+import { useState } from "react";
+import styled from "styled-components";
+import { searchBook } from '../../../utils/book.js';
+import { searchVideo } from '../../../utils/video.js';
+import GlobalHeader from "../../organisms/GlobalHeader";
+import Login from "../../templates/login/Login";
+import Main from "../../templates/mainContent/Main";
 
 export default function Home({ isLoggedIn }) {
-  const KEY = process.env.REACT_APP_API_KEY;
   const [loginPopState, setLoginPopState] = useState(false);
   const handleLoginPop = () => {
     setLoginPopState((prev) => !prev);
   };
+
+  const handleVideo = () =>{
+    let keyword = "눈사람"
+    console.log(searchVideo(keyword))
+  }
+
+  const handleBook = () => {
+    let keyword = "눈사람"
+    console.log(searchBook(keyword)) 
+  }
 
   return (
     <Wrapper>
@@ -20,7 +28,11 @@ export default function Home({ isLoggedIn }) {
         isLoggedIn={isLoggedIn}
         loginPopState={loginPopState}
         handleLoginPop={handleLoginPop}
-      />
+      /><>
+      {handleBook()}
+      {handleVideo()}
+      </>
+
       <Main />
 
       {loginPopState && <Login setLoginPopState={setLoginPopState} />}
