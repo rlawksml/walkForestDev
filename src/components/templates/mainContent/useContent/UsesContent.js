@@ -42,8 +42,7 @@ export default function UsesContent({ handleClickOpen }) {
   ];
 
   const tipTitle = null;
-  const tipDesc =
-    "방문한 숲 또는 산책로의 방문 기록을 남겨보고 추천해보세요!";
+  const tipDesc = "방문한 숲 또는 산책로의 방문 기록을 남겨보고 추천해보세요!";
 
   const [usesData, setUsesData] = useState();
   const [categoryState, setCategoryState] = useState(0);
@@ -98,7 +97,7 @@ export default function UsesContent({ handleClickOpen }) {
       <Title variant="">
         <img src={emojiLight} alt="전구 아이콘" />
         이렇게{" "}
-        <Typography variant="" color={"primary"}>
+        <Typography sx={{ margin: "0 0 0 7px" }} variant="" color={"primary"}>
           활용
         </Typography>
         해보세요!{" "}
@@ -115,7 +114,7 @@ export default function UsesContent({ handleClickOpen }) {
           ></NormalButton>
         )}
       </Title>
-      <CategoryCt container>
+      {/* <CategoryCt container>
         {usesCategory?.map((item, index) => {
           const isActive = categoryState === index;
           return (
@@ -132,7 +131,7 @@ export default function UsesContent({ handleClickOpen }) {
             </CategoryItem>
           );
         })}
-      </CategoryCt>
+      </CategoryCt> */}
 
       <CusGrid container>
         {usesData?.map((item, index) => {
@@ -212,8 +211,8 @@ const CategoryItem = styled(Chip)`
     button {
       background: #3cb371;
     }
-    span{
-      color : #fff;
+    span {
+      color: #fff;
     }
   }
 `;

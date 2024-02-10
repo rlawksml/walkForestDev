@@ -14,8 +14,10 @@ import { useState } from "react";
 import { isBrowser } from "react-device-detect";
 import DropMenu from "../templates/menus/DropMenu";
 import SideMenu from "../templates/menus/SideMenu";
+import { useNavigate } from "react-router";
+import Divider from "@mui/joy/Divider";
 
-  export default function GlobalHeader ({isLoggedIn, handleLoginPop}){
+export default function GlobalHeader({ isLoggedIn, handleLoginPop }) {
   // 로그인 드랍 메뉴
   const [anchorEl, setAnchorEl] = useState(null);
   const DropOpen = Boolean(anchorEl);
@@ -27,6 +29,8 @@ import SideMenu from "../templates/menus/SideMenu";
   const handleDropMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -43,16 +47,17 @@ import SideMenu from "../templates/menus/SideMenu";
                 onClick={(e) => {
                   setSideMenuShow((prev) => !prev);
                 }}
-              >
-                <MenuTools sx={{ width: "35px", height: "35px" }} />
-              </MyMenu>
+              ></MyMenu>
               <Typography
                 align="center"
                 variant="h8"
                 component="div"
-                sx={{ flexGrow: 1 }}
+                sx={{ flexGrow: 1, cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/");
+                }}
               >
-                <Typography variant="h6">숲속으로</Typography>
+                <Typography variant="h6">📖 BOOK-ROAD</Typography>
               </Typography>
               {isLoggedIn ? (
                 <MyMenu
@@ -67,7 +72,7 @@ import SideMenu from "../templates/menus/SideMenu";
                 >
                   <Avatar sx={{ width: 35, height: 35 }} />
                   <Typography className="username" variant="h6">
-                    User
+                    사용자
                   </Typography>
                 </MyMenu>
               ) : (
@@ -97,17 +102,17 @@ import SideMenu from "../templates/menus/SideMenu";
                 setSideMenuShow((prev) => !prev);
               }}
             >
-              <MenuTools />
+              {/* <MenuTools /> */}
             </MyMenu>
             <Typography
               align="center"
               variant="h8"
               component="div"
-              sx={{ flexGrow: 1 }}
+              sx={{ flexGrow: 1, cursor: "pointer" }}
+              onClick={() => navigate("/")}
             >
-              <Typography variant="h6">숲속으로</Typography>
+              <Typography variant="h6">📖 BOOK-ROAD</Typography>
             </Typography>
-
             {isLoggedIn ? (
               <MyMenu
                 size="large"
@@ -145,7 +150,7 @@ import SideMenu from "../templates/menus/SideMenu";
           handleDropMenu={handleDropMenu}
         />
       )}
-      {sideMenuShow && <SideMenu setSideMenuShow={setSideMenuShow} />}
+      {/* {sideMenuShow && <SideMenu setSideMenuShow={setSideMenuShow} />} */}
     </Box>
   );
 }
@@ -155,7 +160,7 @@ const MyAppBar = styled(AppBar)`
 `;
 
 const MyToolBar = styled(Toolbar)`
-background: #3cb371;
+  background: #3cb371;
 `;
 
 const MyMenu = styled(IconButton)`

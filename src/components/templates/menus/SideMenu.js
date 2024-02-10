@@ -54,7 +54,7 @@ export default function SideMenu({ setSideMenuShow }) {
           <ListItemButton onClick={toggleDrawer(anchor, false)}>
             <ListItemIcon>
               {/* <img src={Logo} alt={"MESsie"} /> */}
-              {/* <Typography variant="h8">숲속으로</Typography> */}
+              {/* <Typography variant="h8">BOOK-ROAD</Typography> */}
             </ListItemIcon>
           </ListItemButton>
         </ListItem>
@@ -84,26 +84,41 @@ export default function SideMenu({ setSideMenuShow }) {
                 <ListItemText className="accTitle" primary={"최신 경로"} />
               </CusAccordionSummary>
               <AccordionDetails>
-                <ListItemButton onClick={() => {alert("준비중인 서비스입니다.")}}>
+                <ListItemButton
+                  onClick={() => {
+                    alert("준비중인 서비스입니다.");
+                  }}
+                >
                   <ListItemIcon></ListItemIcon>
                   <ListItemText primary={"산책로"} />
                 </ListItemButton>
-                <ListItemButton onClick={() => {alert("준비중인 서비스입니다.")}}>
+                <ListItemButton
+                  onClick={() => {
+                    alert("준비중인 서비스입니다.");
+                  }}
+                >
                   <ListItemIcon></ListItemIcon>
                   <ListItemText primary={"트레킹"} />
                 </ListItemButton>
-                <ListItemButton onClick={() => {alert("준비중인 서비스입니다.")}}>
+                <ListItemButton
+                  onClick={() => {
+                    alert("준비중인 서비스입니다.");
+                  }}
+                >
                   <ListItemIcon></ListItemIcon>
                   <ListItemText primary={"등산"} />
                 </ListItemButton>
-                
               </AccordionDetails>
             </Accordion>
           </AccordionGroup>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton onClick={() => {alert("준비중인 서비스입니다.")}}>
+          <ListItemButton
+            onClick={() => {
+              alert("준비중인 서비스입니다.");
+            }}
+          >
             <ListItemIcon>
               <AddToPhotosOutlinedIcon />
             </ListItemIcon>
@@ -111,7 +126,11 @@ export default function SideMenu({ setSideMenuShow }) {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => {alert("준비중인 서비스입니다.")}}>
+          <ListItemButton
+            onClick={() => {
+              alert("준비중인 서비스입니다.");
+            }}
+          >
             <ListItemIcon>
               <TextsmsOutlinedIcon />
             </ListItemIcon>
@@ -120,7 +139,11 @@ export default function SideMenu({ setSideMenuShow }) {
         </ListItem>
         <Divider />
         <ListItem disablePadding>
-          <ListItemButton onClick={() => {alert("준비중인 서비스입니다.")}}>
+          <ListItemButton
+            onClick={() => {
+              alert("준비중인 서비스입니다.");
+            }}
+          >
             <ListItemIcon>
               <WebOutlinedIcon />
             </ListItemIcon>

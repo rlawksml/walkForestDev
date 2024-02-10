@@ -2,7 +2,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import ErrorIcon from "@mui/icons-material/Error";
 import Chip from "@mui/joy/Chip";
 import { Grid, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { isBrowser } from "react-device-detect";
 import styled from "styled-components";
 import emoLens from "../../../../assets/images/emo_lens.png";
@@ -15,6 +15,7 @@ import ModalPopProgram from "../../ModalPopProgram";
 import ToastMessage from "../../ToastMessage";
 import ToolTips from "../../ToolTips";
 import AroundItems from "./AroundItems";
+import { LoginContext } from "../../../../utils/providers/login/LoginContext";
 
 export default function AroundContent({ handleClickOpen }) {
   const defaultData = [
@@ -52,13 +53,22 @@ export default function AroundContent({ handleClickOpen }) {
 
   const usesCategory = [
     { type: "all", img: "", title: "전체", icon: "" },
-    { type: "copy", img: "", title: "유료 프로그램", icon: "" },
-    { type: "hash", img: "", title: "무료 프로그램", icon: "" },
-    { type: "intro", img: "", title: "지난 프로그램", icon: "" },
+    { type: "copy", img: "", title: "최신순", icon: "" },
+    { type: "hash", img: "", title: "오래된순", icon: "" },
+    { type: "intro", img: "", title: "선호도순", icon: "" },
   ];
 
   const tipTitle = null;
-  const tipDesc = "숲에서 진행되는 프로그램에 참여해보세요!";
+  // const tipDesc = `나의 도서 리스트는 내가 찜한 도서 목록을 보여줍니다.<br/> <로그인 이후 사용 가능합니다>`
+  const tipDesc = (
+    <p>
+      나의 도서 리스트는 내가 찜한 도서 목록을 보여줍니다.
+      <br />
+      로그인 이후 사용 가능합니다
+    </p>
+  );
+
+  const { isLogined, setIsLogined } = useContext(LoginContext);
 
   const [aroundData, setAroundData] = useState();
   const [categoryState, setCategoryState] = useState(0);
@@ -127,8 +137,7 @@ export default function AroundContent({ handleClickOpen }) {
   return (
     <UsesSection>
       <Title variant="h6">
-        <img src={emoLens} alt="둘러보기아이콘"></img>
-        프로그램 참여하기{" "}
+        ❤️ 나의 도서 리스트{" "}
         {isBrowser ? (
           <ToolTips position={"right"} title={tipTitle} desc={tipDesc}>
             <CusNoticeIcon color="" />
@@ -161,31 +170,35 @@ export default function AroundContent({ handleClickOpen }) {
         })}
       </CategoryCt>
 
-      <CusGrid container>
-        {aroundData?.map((item, index) => {
-          const isActive = aroundItemState === index;
-          return (
-            <AroundItems
-              item
-              key={index}
-              typeColor={item.typeColor}
-              itemtype={item.typeText}
-              desc={item.desc}
-              thumNail={item.thumNail}
-              userName={item.userName}
-              Ncart={item.numOfCart}
-              Nlike={item.numOfLike}
-              handleToastMessage={handleToastMessage}
-              setShowToast={setShowToast}
-              aroundCalss={isActive}
-              onClick={() => {
-                handleAroundItem(index, item);
-              }}
-              handleAroundItemDetail={handleAroundItemDetail}
-            />
-          );
-        })}
-      </CusGrid>
+      {isLogined ? (
+        <CusGrid container>
+          {aroundData?.map((item, index) => {
+            const isActive = aroundItemState === index;
+            return (
+              <AroundItems
+                item
+                key={index}
+                typeColor={item.typeColor}
+                itemtype={item.typeText}
+                desc={item.desc}
+                thumNail={item.thumNail}
+                userName={item.userName}
+                Ncart={item.numOfCart}
+                Nlike={item.numOfLike}
+                handleToastMessage={handleToastMessage}
+                setShowToast={setShowToast}
+                aroundCalss={isActive}
+                onClick={() => {
+                  handleAroundItem(index, item);
+                }}
+                handleAroundItemDetail={handleAroundItemDetail}
+              />
+            );
+          })}
+        </CusGrid>
+      ) : (
+        <Empty>로그인 후 사용해보세요</Empty>
+      )}
 
       {showToast && (
         <ToastMessage setShowToast={setShowToast} text={toastState} />
@@ -247,11 +260,24 @@ const CategoryItem = styled(Chip)`
     button {
       background: #3cb371;
     }
-    span{
-      color : #fff;
+    span {
+      color: #fff;
     }
   }
 `;
 const CusNoticeIcon = styled(ErrorIcon)`
   color: #3cb371;
+`;
+
+const Empty = styled.div`
+  width: 100%;
+  height: 60px;
+  padding: 30px;
+  background-color: #dcdcdc;
+  border-left: 5px solid tomato;
+  color: #434;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
 `;

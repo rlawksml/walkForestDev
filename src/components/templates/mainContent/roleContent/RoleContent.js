@@ -12,10 +12,10 @@ import emojiFire from "../../../../assets/images/emo_fire.png";
 
 export default function RoleContent() {
   const roleList = [
-    { img: roleImg01, name: "가까운 산책로" },
-    { img: roleImg02, name: "넓은 산책로" },
-    { img: roleImg03, name: "방문 최다 산책로" },
-    { img: roleImg04, name: "초보 산책로" },
+    { img: roleImg01, name: "인문학 도서" },
+    { img: roleImg02, name: "철학 도서" },
+    { img: roleImg03, name: "문학 도서" },
+    { img: roleImg04, name: "랜덤 추천 도서" },
   ];
   const UserRole = { img: roleImg05, name: "나의 기록" };
 
@@ -26,7 +26,7 @@ export default function RoleContent() {
       <Title variant="">
         <img src={emojiFire} alt="불이미지"></img> 오늘은 어떤 것으로{" "}
         {"         "}
-        <Typography variant="" color={"primary"}>
+        <Typography sx={{ margin: "0 0 0 7px" }} variant="" color={"primary"}>
           {"   "}
           시작
         </Typography>

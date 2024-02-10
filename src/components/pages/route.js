@@ -6,20 +6,21 @@ import Dashboard from "./dashboard";
 import Intro from "./Intro";
 import Faq from "./docs/Faq";
 import MyBox from "./MyBox";
+import { LoginContext } from "../../utils/providers/login/LoginContext";
 
 export default function Router() {
   // context로 변경해야함
-  const [isLoggedIn, setIsLoggenIn] = useState(false);
+  const { isLogined, setIsLogined } = useContext(LoginContext);
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
+        <Route path="/" element={<Home isLogined={isLogined} />} />
         <Route
           path="/dashboard"
-          element={isLoggedIn ? <Dashboard /> : <Home />}
+          element={isLogined ? <Dashboard /> : <Home />}
         />
-        <Route path="/mybox" element={isLoggedIn ? <MyBox /> : <Home />} />
+        <Route path="/mybox" element={isLogined ? <MyBox /> : <Home />} />
         <Route path="/intro" element={<Intro />} />
       </Routes>
     </>

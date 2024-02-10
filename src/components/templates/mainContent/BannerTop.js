@@ -1,84 +1,138 @@
 import { Chip } from "@mui/joy";
-import { Container, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { isBrowser } from "react-device-detect";
+import { Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import bg from '../../../assets/images/background.jpg';
-import bgVideo from '../../../assets/images/bgVideo.mp4';
+import { searchBook } from "../../../utils/book.js";
 
 export default function BannerTop() {
+  let randomNum = Math.floor(Math.random() * 4);
+  let todayKeyWordList = ["마당을 나온 암탉", "홍길동", "철학콘서트", "AI"];
+
+  const [todayBook, setTodayBook] = useState();
+  const [title, setTitle] = useState();
+  const [desc, setDesc] = useState();
+  const [url, setUrl] = useState();
+  const [thum, setThum] = useState();
+
+  useEffect(() => {
+    const promise = searchBook(todayKeyWordList[randomNum]);
+    const getData = () => {
+      promise.then((data) => {
+        setTodayBook(data);
+
+        setTitle(data[0].title);
+        setDesc(data[0].contents);
+        setUrl(data[0].url);
+        setThum(data[0].thumbnail);
+      });
+    };
+    getData();
+  }, []);
+
+  const handleLength = () => {
+    if (desc && desc.length >= 85) {
+      return desc.substr(0, 85) + "...";
+    } else {
+      return desc;
+    }
+  };
+
   return (
     <>
-      <BannerSection >
-        <div className="BannerCt">
-          <div className="textCt">
-
-          <Chip sx={{zIndex:1}} label="primary" color="primary" variant="outlined">
-            데일리 추천 코스
-          </Chip>
-          <Typography sx={{zIndex:1, position:"relative"}} variant={isBrowser ? "h4" : "h6"}>오늘의 추천코스 보라매공원</Typography>
-          <Typography sx={{zIndex: 1,position:"relative"}} color={"white"} variant="h7">
-          서울특별시 동작구 여의대방로20길 33
-          </Typography>
+      <BannerSection>
+        <div bg={thum} className="BannerCt">
+          <div
+            onClick={() => {
+              window.open(url);
+            }}
+            className="imgCt"
+          >
+            <img src={thum} alt={title}></img>
           </div>
-          <video autoPlay loop muted>
-            <source src={bgVideo} type="video/mp4" />
-          </video>
+          <div className="contentCt">
+            <MyChip label="primary" color="primary" variant="outlined">
+              오늘의 추천
+            </MyChip>
+            <Title variant="h4">{title}</Title>
+            <Typography className="content" color={"black"} variant="h8">
+              {handleLength()}
+            </Typography>
+          </div>
         </div>
       </BannerSection>
     </>
   );
 }
 
-const BannerSection = styled.div`
+const MyChip = styled(Chip)`
+  background: #fcde90;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  padding: 8px 30px;
+  margin-bottom: 10px;
+`;
 
-  background-size : cover;
-  background-position: center;
+const Title = styled(Typography)`
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin-bottom: 10px;
+`;
+
+const BannerSection = styled.div`
+  background: transparent;
+  z-indez: 1;
   color: #fff;
   font-weight: bold;
   width: 100%;
-  height: 220px;
+  height: 350px;
   display: flex;
 
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  position: relative;
 
-  & .BannerCt{
-    width:100%;
+  overflow: hidden;
+  &:after {
+    content: "";
+    // z-index: -1;
+    background-color: #81c9a1;
+    width: 80%;
     height: 100%;
-    overflow:hidden;
-    position:relative;
-  }
-  & .textCt{
-    display:flex;
-
+    border-radius: 50px;
     position: absolute;
-    top:50%;
-    left:50%;
-    transform : translate(-50%,-50%);
-    flex-direction:column;
-    justify-content:center;
-    z-index:1;
-    padding:15px;
-    background: rgba(0,0,0, 0.5);
-    border-radius: 10px;
-
-    @media(max-width:480px){
-      width: 80%;
-      font-size:12px;
-      top:30%;
-      left:50%;
-      transform : translate(-50%,-50%);
-    }
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  & video{
-    top:50%;
-    transform: translateY(-40%);
-    left:0;
-    z-index:0;
-    width: 100%;
-    z-index:-1;
+  & .BannerCt {
+    display: flex;
+    z-index: 1;
+    .imgCt {
+      &:hover {
+        cursor: pointer;
+        opacity: 0.9;
+      }
+      margin: 10px;
+      img {
+        width: 140px;
+      }
+    }
+    .contentCt {
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+
+      .content {
+        width: 250px;
+        word-break: keep-all;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
   }
 `;

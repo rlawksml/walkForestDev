@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { searchBook } from '../../../utils/book.js';
-import { searchVideo } from '../../../utils/video.js';
+import { searchBook } from "../../../utils/book.js";
+import { searchVideo } from "../../../utils/video.js";
 import GlobalHeader from "../../organisms/GlobalHeader";
 import Login from "../../templates/login/Login";
 import Main from "../../templates/mainContent/Main";
@@ -12,15 +12,15 @@ export default function Home({ isLoggedIn }) {
     setLoginPopState((prev) => !prev);
   };
 
-  const handleVideo = () =>{
-    let keyword = "눈사람"
-    console.log(searchVideo(keyword))
-  }
+  const handleVideo = () => {
+    let keyword = "암탉";
+    console.log(searchVideo(keyword));
+  };
 
   const handleBook = () => {
-    let keyword = "눈사람"
-    console.log(searchBook(keyword)) 
-  }
+    let keyword = "마당을 나온 암탉";
+    console.log(searchBook(keyword));
+  };
 
   return (
     <Wrapper>
@@ -28,9 +28,10 @@ export default function Home({ isLoggedIn }) {
         isLoggedIn={isLoggedIn}
         loginPopState={loginPopState}
         handleLoginPop={handleLoginPop}
-      /><>
-      {handleBook()}
-      {handleVideo()}
+      />
+      <>
+        {handleBook()}
+        {handleVideo()}
       </>
 
       <Main />

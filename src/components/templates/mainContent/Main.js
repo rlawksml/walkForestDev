@@ -1,16 +1,19 @@
+import SearchIcon from "@mui/icons-material/Search";
+import { Button } from "@mui/joy";
+import Input from "@mui/joy/Input";
+import { Container } from "@mui/material";
 import { useContext, useState } from "react";
-import AroundContent from "./aroundContent/AroundContent";
+import { ModalContext } from "../../../utils/providers/modal/ModalContext";
+import Faq from "../../pages/docs/Faq";
+import PersonalPolicy from "../../pages/docs/PersonalPolicy";
+import ServicePolicy from "../../pages/docs/ServicePolicy";
+import Dialogs from "../Dialogs";
 import BannerTop from "./BannerTop";
+import BookList from "./BookList/BookList";
+import AroundContent from "./aroundContent/AroundContent";
 import RoleContent from "./roleContent/RoleContent";
 import UsesContent from "./useContent/UsesContent";
-import Dialogs from "../Dialogs";
-import { Container } from "@mui/material";
-import Footer from "../../organisms/Footer";
-import { isBrowser } from "react-device-detect";
-import Faq from "../../pages/docs/Faq";
-import ServicePolicy from "../../pages/docs/ServicePolicy";
-import PersonalPolicy from "../../pages/docs/PersonalPolicy";
-import { ModalContext } from "../../../utils/providers/modal/ModalContext";
+import styled from "styled-components";
 
 export default function Main() {
   // 다이아로그 관련 state
@@ -44,15 +47,35 @@ export default function Main() {
     <>
       <BannerTop />
       <Container maxWidth={"lg"}>
+        <MyInput>
+          <Input
+            sx={{ height: "52px" }}
+            className="searchBar"
+            variant="outlined"
+            color="neutral"
+            placeholder="도서 검색"
+            startDecorator={
+              <Button
+                sx={{ height: "100%" }}
+                variant="soft"
+                color="neutral"
+                startDecorator={<SearchIcon />}
+              ></Button>
+            }
+          />
+        </MyInput>
+
         <RoleContent />
-        <UsesContent
-          handleDialogText={handleDialogText}
-          handleClickOpen={handleDialog}
-        />
+        {/* 로그인 되면 옮길 곳 */}
         <AroundContent
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}
         />
+        <UsesContent
+          handleDialogText={handleDialogText}
+          handleClickOpen={handleDialog}
+        />
+        <BookList />
       </Container>
 
       {openDia && (
@@ -80,3 +103,14 @@ export default function Main() {
     </>
   );
 }
+
+const MyInput = styled.div`
+  margin: 50px 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .searchBar {
+    width: 50%;
+    padding-left: 10px;
+  }
+`;

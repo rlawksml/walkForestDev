@@ -82,8 +82,7 @@ export default function Login({
               alignItems: "center",
             }}
           >
-
-            <Typography variant="h4">숲속으로</Typography>
+            <Typography variant="h4">BOOK-ROAD</Typography>
             {/* <img src={Logo} alt="MESsie"></img> */}
 
             <LoginTab>
@@ -151,12 +150,12 @@ export default function Login({
                         </Grid>
                       </Grid>
                     </Box>
-                    
                   </TabPanel>
                   <TabPanel value="2">
                     <SignUpCt id="tab_sign">
-            <Typography sx={{textAlign:"center"}} variant="h5">준비중인 서비스 입니다.</Typography>
-                      
+                      <Typography sx={{ textAlign: "center" }} variant="h5">
+                        준비중인 서비스 입니다.
+                      </Typography>
                     </SignUpCt>
                   </TabPanel>
                 </TabContext>
