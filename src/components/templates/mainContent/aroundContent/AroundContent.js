@@ -10,7 +10,6 @@ import roleImg01 from "../../../../assets/images/roleImg01.png";
 import roleImg02 from "../../../../assets/images/roleImg02.png";
 import roleImg03 from "../../../../assets/images/roleImg03.png";
 import NormalButton from "../../../atomic/NormalButton";
-// import ModalPop from "../../ModalPop";
 import ModalPopProgram from "../../ModalPopProgram";
 import ToastMessage from "../../ToastMessage";
 import ToolTips from "../../ToolTips";
@@ -61,17 +60,18 @@ export default function AroundContent({ handleClickOpen }) {
   const tipTitle = null;
   // const tipDesc = `나의 도서 리스트는 내가 찜한 도서 목록을 보여줍니다.<br/> <로그인 이후 사용 가능합니다>`
   const tipDesc = (
-    <p>
+    <span>
       나의 도서 리스트는 내가 찜한 도서 목록을 보여줍니다.
       <br />
       로그인 이후 사용 가능합니다
-    </p>
+    </span>
   );
 
   const { isLogined, setIsLogined } = useContext(LoginContext);
 
   const [aroundData, setAroundData] = useState();
   const [categoryState, setCategoryState] = useState(0);
+  const [categoryList, setCategoryList] = useState("");
   const [toastState, setToastState] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [aroundItemState, setAroundItemState] = useState("none");
@@ -96,11 +96,13 @@ export default function AroundContent({ handleClickOpen }) {
   };
 
   // 카테고리 버튼 클릭시 정렬 함수
-  const sortAroundItem = (index, type) => {
+  const sortAroundItem = (index) => {
     if (index === 0) {
       setAroundData(defaultData);
     } else {
-      setAroundData(defaultData.filter((item) => item.type === type));
+      setAroundData(
+        defaultData.filter((item) => item.type === categoryList[index].type)
+      );
     }
   };
 
@@ -119,7 +121,12 @@ export default function AroundContent({ handleClickOpen }) {
   };
 
   useEffect(() => {
+    setAroundData([]);
+  }, [categoryState]);
+
+  useEffect(() => {
     setAroundData(defaultData);
+    setCategoryList(usesCategory);
 
     // 다른 부분 클릭시 아이템 active 해제
     const handleClickOutside = (event) => {
@@ -161,7 +168,7 @@ export default function AroundContent({ handleClickOpen }) {
               color="neutral"
               size="lg"
               className={isActive ? "active" : ""}
-              endDecorator={isActive && <CheckIcon fontSize="md" />}
+              // endDecorator={isActive && <CheckIcon fontSize="md" />}
               onClick={() => handleCategoryBtn(index, item.type)}
             >
               {item.title}

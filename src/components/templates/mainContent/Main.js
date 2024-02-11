@@ -14,6 +14,10 @@ import AroundContent from "./aroundContent/AroundContent";
 import RoleContent from "./roleContent/RoleContent";
 import UsesContent from "./useContent/UsesContent";
 import styled from "styled-components";
+import MainSearch from "../../organisms/MainSearch";
+import KakaoMap from "../map/KakaoMap";
+import MapSection from "./mapContent/MapSection";
+import LibararyData from "../../../utils/LibararyData";
 
 export default function Main() {
   // 다이아로그 관련 state
@@ -45,27 +49,13 @@ export default function Main() {
 
   return (
     <>
-      <BannerTop />
       <Container maxWidth={"lg"}>
-        <MyInput>
-          <Input
-            sx={{ height: "52px" }}
-            className="searchBar"
-            variant="outlined"
-            color="neutral"
-            placeholder="도서 검색"
-            startDecorator={
-              <Button
-                sx={{ height: "100%" }}
-                variant="soft"
-                color="neutral"
-                startDecorator={<SearchIcon />}
-              ></Button>
-            }
-          />
-        </MyInput>
-
-        <RoleContent />
+        <BannerTop />
+        <MainSearch />
+        <RoleContent
+          handleDialogText={handleDialogText}
+          handleClickOpen={handleDialog}
+        />
         {/* 로그인 되면 옮길 곳 */}
         <AroundContent
           handleDialogText={handleDialogText}
@@ -75,7 +65,7 @@ export default function Main() {
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}
         />
-        <BookList />
+        <MapSection />
       </Container>
 
       {openDia && (
@@ -88,29 +78,6 @@ export default function Main() {
       )}
 
       {modalOpen && <Faq openFaq={modalOpen} setOpenFaq={setModalOpen} />}
-      {openServiceM && (
-        <ServicePolicy
-          openServiceM={openServiceM}
-          setOpenServiceM={setOpenServiceM}
-        />
-      )}
-      {openPersonM && (
-        <PersonalPolicy
-          openPersonM={openPersonM}
-          setOpenPersonM={setOpenPersonM}
-        />
-      )}
     </>
   );
 }
-
-const MyInput = styled.div`
-  margin: 50px 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  .searchBar {
-    width: 50%;
-    padding-left: 10px;
-  }
-`;

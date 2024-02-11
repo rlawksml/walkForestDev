@@ -1,4 +1,3 @@
-import CheckIcon from "@mui/icons-material/Check";
 import ErrorIcon from "@mui/icons-material/Error";
 import Chip from "@mui/joy/Chip";
 import { Grid, Typography } from "@mui/material";
@@ -10,25 +9,25 @@ import ToolTips from "../../ToolTips";
 import UseItems from "./UseItems";
 
 import emojiLight from "../../../../assets/images/emo_light.png";
-import ModalPop from "../../ModalPop";
+import ModalPop from "../../modal/ModalPop";
 
 export default function UsesContent({ handleClickOpen }) {
   const defaultData = [
     {
       type: "hash",
-      typeText: "등산로",
+      typeText: "검색하기",
       typeColor: "p",
-      desc: "초보자도 가기 쉬운 등산로를 추천합니다!",
+      desc: "검색어를 통해서 다양한 책 정보를 검색해보세요! '검색 한번을 통해 블로그, youtube 검색을 할 수 있습니다!",
     },
     {
       type: "copy",
-      typeText: "공원",
+      typeText: "랜덤리스트",
       typeColor: "y",
-      desc: "집앞 공원이지만, 운동기구도 많고 사람들이 많이 나와서 운동을 하고 있네요 접근성이 좋아서 추천합니다!",
+      desc: "어떤 책을 읽어야할지 고민이 깊을때, 또는 어떤 책이 좋을지 모르겠을 때! 랜덤 리스트를 통해 책을 선택하고 시작해보세요!",
     },
     {
       type: "intro",
-      typeText: "동네구석",
+      typeText: "오늘의 추천",
       typeColor: "g",
       desc: "산책로나 등산로가 아니여도, 동네 구석구석 숨어있는 걷기 좋은 나만의 산책로를 추천합니다!",
     },
@@ -42,7 +41,7 @@ export default function UsesContent({ handleClickOpen }) {
   ];
 
   const tipTitle = null;
-  const tipDesc = "방문한 숲 또는 산책로의 방문 기록을 남겨보고 추천해보세요!";
+  const tipDesc = "다양한 방식의 독서 습관 시작을 지원합니다!";
 
   const [usesData, setUsesData] = useState();
   const [categoryState, setCategoryState] = useState(0);
