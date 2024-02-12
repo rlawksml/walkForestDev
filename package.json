@@ -1,5 +1,5 @@
 {
-  "homepage" : "https://rlawksml.github.io/",
+  "homepage": "https://rlawksml.github.io/",
   "name": "WalkForest",
   "version": "0.1.0",
   "private": true,
@@ -21,6 +21,7 @@
     "react-router": "^6.21.3",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
+    "react-uuid": "^2.0.0",
     "styled-components": "^6.1.8",
     "swiper": "^11.0.5",
     "web-vitals": "^2.1.4"
@@ -30,8 +31,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy":"npm run build",
-    "deploy":"gh-pages -d build"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

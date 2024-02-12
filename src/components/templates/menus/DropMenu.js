@@ -6,18 +6,40 @@ import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { ModalContext } from "../../../utils/providers/modal/ModalContext";
 import { useContext } from "react";
+import { LoginContext } from "../../../utils/providers/login/LoginContext";
+import { LogoutSession } from "../../../utils/providers/login/LoginSession";
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 
 export default function DropMenu({ open, anchorEl, setAnchorEl }) {
   const navigate = useNavigate();
 
+  let { isLogined, setIsLogined, userInfo, setUserInfo } =
+    useContext(LoginContext);
   // faq
   const { setModalOpen } = useContext(ModalContext);
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogOut = () => {
+    setIsLogined(false);
+    navigate("/");
+    handleClose();
+    LogoutSession();
+  };
+
+  const reign = () => {
+    const getData = JSON.parse(localStorage.getItem("user"));
+    const updateUesrList = getData?.filter(
+      (item) => item.id !== userInfo.userId
+    );
+    localStorage.setItem("user", JSON.stringify(updateUesrList));
+    handleLogOut();
+    return;
   };
 
   return (
@@ -68,35 +90,29 @@ export default function DropMenu({ open, anchorEl, setAnchorEl }) {
           </ListItemIcon>{" "}
           나의 정보
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            navigate("/mybox");
-            handleClose();
-          }}
-        >
-          <ListItemIcon>
-            <BookmarkIcon fontSize="small" />
-          </ListItemIcon>{" "}
-          보관함
-        </MenuItem>
 
+        <Divider />
         <MenuItem
           onClick={() => {
-            setModalOpen((prev) => !prev);
-            handleClose();
+            handleLogOut();
           }}
         >
-          <ListItemIcon>
-            <HelpCenterIcon fontSize="small" />
-          </ListItemIcon>
-          FAQ
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
           로그아웃
+        </MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={() => {
+            navigate("/");
+            reign();
+          }}
+        >
+          <ListItemIcon>
+            <SentimentVeryDissatisfiedIcon fontSize="small" />
+          </ListItemIcon>{" "}
+          탈퇴
         </MenuItem>
       </Menu>
     </>

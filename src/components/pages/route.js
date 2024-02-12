@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import Home from "./home";
 import Dashboard from "./dashboard";
@@ -7,9 +7,22 @@ import SearchBook from "./SearchBook";
 import Faq from "./docs/Faq";
 import MyBox from "./MyBox";
 import { LoginContext } from "../../utils/providers/login/LoginContext";
+import { LoginSessionGet } from "../../utils/providers/login/LoginSession";
 
 export default function Router() {
-  const { isLogined, setIsLogined } = useContext(LoginContext);
+  const { isLogined, setIsLogined, userInfo, setUserInfo } =
+    useContext(LoginContext);
+
+  useEffect(() => {
+    const loggedInState = LoginSessionGet();
+    setIsLogined(loggedInState);
+    setUserInfo({
+      userUUID: sessionStorage.getItem("uuid"),
+      userNickName: sessionStorage.getItem("nickname"),
+      userId: sessionStorage.getItem("ud"),
+      userPw: "",
+    });
+  }, []);
 
   return (
     <>

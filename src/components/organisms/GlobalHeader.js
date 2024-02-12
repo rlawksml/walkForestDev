@@ -10,14 +10,18 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { isBrowser } from "react-device-detect";
 import DropMenu from "../templates/menus/DropMenu";
 import SideMenu from "../templates/menus/SideMenu";
 import { useNavigate } from "react-router";
 import Divider from "@mui/joy/Divider";
+import { LoginContext } from "../../utils/providers/login/LoginContext";
 
-export default function GlobalHeader({ isLoggedIn, handleLoginPop }) {
+export default function GlobalHeader({ handleLoginPop }) {
+  let { isLogined, setIsLogined, userInfo, setUserInfo } =
+    useContext(LoginContext);
+
   // 로그인 드랍 메뉴
   const [anchorEl, setAnchorEl] = useState(null);
   const DropOpen = Boolean(anchorEl);
@@ -31,6 +35,8 @@ export default function GlobalHeader({ isLoggedIn, handleLoginPop }) {
   };
 
   const navigate = useNavigate();
+
+  useEffect(() => {}, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -59,7 +65,7 @@ export default function GlobalHeader({ isLoggedIn, handleLoginPop }) {
               >
                 <Typography variant="h6">📖 BOOK-ROAD</Typography>
               </Typography>
-              {isLoggedIn ? (
+              {isLogined ? (
                 <MyMenu
                   size="large"
                   edge="start"
@@ -72,7 +78,9 @@ export default function GlobalHeader({ isLoggedIn, handleLoginPop }) {
                 >
                   <Avatar sx={{ width: 35, height: 35 }} />
                   <Typography className="username" variant="h6">
-                    사용자
+                    {userInfo.userNickName !== ""
+                      ? userInfo.userNickName
+                      : "사용자"}
                   </Typography>
                 </MyMenu>
               ) : (
@@ -113,7 +121,7 @@ export default function GlobalHeader({ isLoggedIn, handleLoginPop }) {
             >
               <Typography variant="h6">📖 BOOK-ROAD</Typography>
             </Typography>
-            {isLoggedIn ? (
+            {isLogined ? (
               <MyMenu
                 size="large"
                 edge="start"

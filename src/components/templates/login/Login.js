@@ -2,7 +2,6 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { Checkbox, FormControlLabel, Typography } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -12,56 +11,73 @@ import Link from "@mui/material/Link";
 import Tab from "@mui/material/Tab";
 import TextField from "@mui/material/TextField";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
-
-import icon_google from "../../../assets/images/google.svg";
 import icon_close from "../../../assets/images/icon_close.svg";
-import icon_kakao from "../../../assets/images/kakao.svg";
-import icon_naver from "../../../assets/images/naver.svg";
+
+import {
+  CheckLoginStatus,
+  LoginLocalGet,
+  LoginSessionSet,
+} from "../../../utils/providers/login/LoginSession";
+import SignUp from "./SignUp";
+import { LoginContext } from "../../../utils/providers/login/LoginContext";
 
 const defaultTheme = createTheme();
 
 export default function Login({
-  getGoogleUserInfo,
-  kakao,
-  handleNaverLogin,
+  setToastMessage,
+  setOpenMeesage,
   setLoginPopState,
 }) {
+  let { isLogined, setIsLogined, userInfo, setUserInfo } =
+    useContext(LoginContext);
   // 로그인 tabState
   const [tabState, setTabState] = useState("login");
 
   const [value, setValue] = useState("1");
+  const [id, setIdState] = useState("");
+  const [pw, setPwState] = useState("");
 
   // submit함수
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    let userData = LoginLocalGet();
+    if (userData?.map((item) => (item.id === id ? true : false))) {
+      let loginuser = userData.filter((item) => item.id === id);
+      if (loginuser[0].pw === pw) {
+        setUserInfo({
+          userUUID: loginuser[0].uuid,
+          userNickName: loginuser[0].nickname,
+          userId: loginuser[0].id,
+          userPw: loginuser[0].pw,
+        });
+        setIsLogined(true);
+
+        LoginSessionSet(
+          loginuser[0].id,
+          loginuser[0].nickname,
+          loginuser[0].uuid,
+          true
+        );
+        setLoginPopState((prev) => !prev);
+        return true;
+      }
+    } else {
+      setToastMessage("아이디 또는 비밀번호가 다릅니다.");
+      setOpenMeesage(true);
+    }
+    // console.log({
+    //   email: data.get("email"),
+    //   password: data.get("password"),
+    // });
   };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  // const googleSocialLogin = useGoogleLogin({
-  //   onSuccess: async ({ access_token }) => {
-  //     const userInfo = await axios.get(
-  //       "https://www.googleapis.com/oauth2/v3/userinfo",
-  //       {
-  //         headers: { Authorization: `Bearer ${access_token}` },
-  //       }
-  //     );
-  //     getGoogleUserInfo(userInfo);
-  //   },
-  //   onError: (errorResponse) => {
-  //     console.error(errorResponse);
-  //   },
-  //   scope: "email",
-  // });
 
   return (
     <LoginCt>
@@ -97,6 +113,7 @@ export default function Login({
                       <Tab label="회원가입" value="2" />
                     </CusTabList>
                   </Box>
+                  {/* 로그인 텝 */}
                   <TabPanel value="1">
                     <Box
                       component="form"
@@ -108,11 +125,15 @@ export default function Login({
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="E-mail Address"
-                        name="email"
-                        autoComplete="email"
+                        id="userId"
+                        label="아이디"
+                        name="userId"
+                        autoComplete="text"
                         autoFocus
+                        value={id}
+                        onChange={(e) => {
+                          setIdState(e.target.value);
+                        }}
                       />
                       <LoginInput
                         margin="normal"
@@ -123,6 +144,10 @@ export default function Login({
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        value={pw}
+                        onChange={(e) => {
+                          setPwState(e.target.value);
+                        }}
                       />
                       <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -133,6 +158,9 @@ export default function Login({
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
+                        onClick={() => {
+                          // handleLoginBtn();
+                        }}
                       >
                         로그인
                       </Button>
@@ -143,20 +171,18 @@ export default function Login({
                             {"아직 회원이 아니신가요? 회원가입"}
                           </Link>
                         </Grid>
-                        <Grid item>
-                          <Link href="#" variant="body2">
-                            비밀번호 찾기
-                          </Link>
-                        </Grid>
+                        <Grid item></Grid>
                       </Grid>
                     </Box>
                   </TabPanel>
+
+                  {/* 회원가입 텝 */}
                   <TabPanel value="2">
-                    <SignUpCt id="tab_sign">
-                      <Typography sx={{ textAlign: "center" }} variant="h5">
-                        준비중인 서비스 입니다.
-                      </Typography>
-                    </SignUpCt>
+                    <SignUp
+                      setLoginPopState={setLoginPopState}
+                      setToastMessage={setToastMessage}
+                      setOpenMeesage={setOpenMeesage}
+                    />
                   </TabPanel>
                 </TabContext>
               </Box>
@@ -170,12 +196,17 @@ export default function Login({
 
 const LoginCt = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 80px;
+  right: 20%;
   background: #fff;
-  height: 100%;
-  width: 100%;
+  height: 50%;
+  width: 30%;
   z-index: 1;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  box-shadow: var(--joy-shadowRing, 0 0 #000),
+    0px 1px 2px 0px
+      rgba(var(--joy-shadowChannel, 21 21 21) / var(--joy-shadowOpacity, 0.08));
 `;
 
 const LoginOtherAcc = styled.div`
@@ -245,6 +276,10 @@ const CloseBtn = styled.button`
   background-size: cover;
   background-position: center;
   border: none;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 const LoginTabBtn = styled.button`
   font-weight: 400;
