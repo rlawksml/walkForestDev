@@ -19,7 +19,7 @@ export default function Router() {
     setUserInfo({
       userUUID: sessionStorage.getItem("uuid"),
       userNickName: sessionStorage.getItem("nickname"),
-      userId: sessionStorage.getItem("ud"),
+      userId: sessionStorage.getItem("id"),
       userPw: "",
     });
   }, []);
