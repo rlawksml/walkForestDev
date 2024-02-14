@@ -17,7 +17,7 @@ const favoriteReducer = (state = initialState, action) => {
       return {
         ...state,
         favorites: state.favorites.filter(
-          (item) => item.isbn !== action.payload.isbn
+          (item) => item.url !== action.payload.item.url
         ),
       };
     default:

@@ -16,7 +16,7 @@ export default function DashBoard() {
   const favoriteList = useSelector((state) => state.favorites.favorites);
 
   const handleRemoveFavorite = (item) => {
-    dispatch(removeFavorite(item.isbn));
+    dispatch(removeFavorite(item));
   };
 
   return (

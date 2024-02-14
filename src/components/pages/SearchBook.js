@@ -9,6 +9,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import YoutubeList from "../templates/mainContent/BookList/YoutubeList";
+import Login from "../templates/login/Login";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,6 +46,10 @@ function a11yProps(index) {
 
 export default function SearchBook({ isLoggedIn }) {
   const [loginPopState, setLoginPopState] = useState(false);
+
+  const [toastMessage, setToastMessage] = useState("");
+  const [openMessage, setOpenMeesage] = useState(false);
+
   const handleLoginPop = () => {
     setLoginPopState((prev) => !prev);
   };
@@ -82,6 +87,13 @@ export default function SearchBook({ isLoggedIn }) {
           </CustomTabPanel>
         </Box>
       </MyContainer>
+      {loginPopState && (
+        <Login
+          setToastMessage={setToastMessage}
+          setOpenMeesage={setOpenMeesage}
+          setLoginPopState={setLoginPopState}
+        />
+      )}
     </Wrapper>
   );
 }

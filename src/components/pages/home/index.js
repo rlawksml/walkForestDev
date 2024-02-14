@@ -19,12 +19,12 @@ export default function Home({ isLoggedIn }) {
 
   const handleVideo = () => {
     let keyword = "암탉";
-    console.log(searchVideo(keyword));
+    // console.log(searchVideo(keyword));
   };
 
   const handleBook = () => {
     let keyword = "마당을 나온 암탉";
-    console.log(searchBook(keyword));
+    // console.log(searchBook(keyword));
   };
 
   return (
