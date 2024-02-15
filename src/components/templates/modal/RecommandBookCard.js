@@ -10,6 +10,7 @@ import CardContent from "@mui/joy/CardContent";
 import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
 import BookmarkAdd from "@mui/icons-material/BookmarkAddOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 
 import styled from "styled-components";
 
@@ -24,49 +25,88 @@ export default function RecommandBookCard({
   const [createAt, setCreatAt] = useState();
 
   useEffect(() => {
-    setThum(modalInfo.thumnail);
-    setDesc(modalInfo.desc);
-    setTitle(modalInfo.title);
-    setCreatAt(modalInfo.createAt);
+    setThum(modalInfo?.thumnail);
+    setDesc(modalInfo?.desc);
+    setTitle(modalInfo?.title);
+    setCreatAt(modalInfo?.createAt);
   }, []);
   return (
     <>
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+      <MyModal fullSize open={modalOpen} onClose={() => setModalOpen(false)}>
         <ModalDialog>
-          <Card sx={{}}>
-            <div>
-              <Typography level="title-lg">{title}</Typography>
-              <Typography level="body-sm">{createAt}</Typography>
-              <IconButton
-                aria-label="bookmark Bahamas Islands"
-                variant="plain"
-                color="neutral"
-                size="sm"
-                sx={{ position: "absolute", top: "0.875rem", right: "0.5rem" }}
-              >
-                <BookmarkAdd />
-              </IconButton>
-            </div>
+          <CloseIcon
+            className="closeBtn"
+            onClick={() => {
+              setModalOpen(false);
+            }}
+          />
+          {modalInfo ? (
+            <Card>
+              <BookHeader>
+                <div>
+                  <Typography sx={{ wordBreak: "keep-all" }} level="title-lg">
+                    {title}
+                  </Typography>
+                  <Typography level="body-sm">{createAt}</Typography>
+                </div>
+                <IconButton
+                  className="bookMarkBtn"
+                  aria-label="bookmark Bahamas Islands"
+                  variant="plain"
+                  color="neutral"
+                  size="sm"
+                  sx={{ marginLeft: "auto" }}
+                >
+                  <BookmarkAdd />
+                </IconButton>
+              </BookHeader>
 
-            <img src={thum} srcSet={thum} loading="lazy" alt="" />
+              <BookImg
+                className=""
+                src={thum}
+                srcSet={thum}
+                loading="lazy"
+                alt=""
+              />
 
-            <CardContent orientation="vertical">
-              <div>
-                <Typography level="body-xs">{desc}</Typography>
-              </div>
-              <Button
-                variant="outlined"
-                size="md"
-                color="primary"
-                aria-label="Explore Bahamas Islands"
-                sx={{ ml: "auto", alignSelf: "center", fontWeight: 500 }}
-              >
-                보러가기
-              </Button>
-            </CardContent>
-          </Card>
+              <CardContent orientation="vertical">
+                <div>
+                  <Typography level="body-xs">{desc}</Typography>
+                </div>
+                <Button
+                  variant="outlined"
+                  size="md"
+                  color="primary"
+                  aria-label="Explore Bahamas Islands"
+                  sx={{ ml: "auto", alignSelf: "center", fontWeight: 500 }}
+                >
+                  보러가기
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <Typography>준비중인 서비스입니다.</Typography>
+          )}
         </ModalDialog>
-      </Modal>
+      </MyModal>
     </>
   );
 }
+
+const MyModal = styled(Modal)`
+  .closeBtn {
+    margin-left: auto;
+  }
+  .bookMarkBtn {
+    margin-bottom: auto;
+  }
+`;
+
+const BookImg = styled.img`
+  width: 80%;
+  margin: 0 auto;
+`;
+
+const BookHeader = styled.div`
+  display: flex;
+`;

@@ -10,6 +10,7 @@ import UseItems from "./UseItems";
 
 import emojiLight from "../../../../assets/images/emo_light.png";
 import ModalPop from "../../modal/ModalPop";
+import ToastMessage from "../../ToastMessage";
 
 export default function UsesContent({ handleClickOpen }) {
   const defaultData = [
@@ -27,9 +28,9 @@ export default function UsesContent({ handleClickOpen }) {
     },
     {
       type: "intro",
-      typeText: "오늘의 추천",
+      typeText: "도서관 찾기",
       typeColor: "g",
-      desc: "산책로나 등산로가 아니여도, 동네 구석구석 숨어있는 걷기 좋은 나만의 산책로를 추천합니다!",
+      desc: "도서관에 대한 정보를 찾고 싶어",
     },
   ];
 
@@ -48,6 +49,8 @@ export default function UsesContent({ handleClickOpen }) {
   const [cardState, setCardState] = useState("none");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState("");
+
+  const [showToast, setShowToast] = useState(false);
 
   // 카테고리 버튼
   const handleCategoryBtn = (index, type) => {
@@ -157,6 +160,14 @@ export default function UsesContent({ handleClickOpen }) {
           modalOpen={modalOpen}
           setModalOpen={setModalOpen}
           modalInfo={modalInfo}
+          setShowToast={setShowToast}
+        />
+      )}
+
+      {showToast && (
+        <ToastMessage
+          text={"개발중인 영역입니다."}
+          setShowToast={setShowToast}
         />
       )}
     </UsesSection>

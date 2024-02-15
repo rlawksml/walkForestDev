@@ -1,59 +1,64 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/joy";
 import Input from "@mui/joy/Input";
 import { SearchContext } from "../../utils/providers/search/SearchContext";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
-export default function MainSearch({}) {
+export default function MainSearch({ searchClass }) {
   const { inputValue, setInputValue } = useContext(SearchContext);
-  //   const [inputValue, setInputValue] = useState();
   const inputRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  //   enter 함수
+  // enter 함수
   const handleInputEnter = (e) => {
     if (e.key === "Enter") {
       setInputValue(e.target.value);
-
-      navigate("/SearchBook");
+      if (location.pathname !== "/SearchBook") {
+        navigate("/SearchBook");
+      }
     }
 
     return;
   };
 
-  //   input button 함수
+  // input button 함수
   const handleInputBtn = () => {
     setInputValue(inputRef.current.value);
-    navigate("/SearchBook");
+    if (location.pathname !== "/SearchBook") {
+      navigate("/SearchBook");
+    }
   };
 
+  useEffect(() => {
+    setInputValue("");
+  }, []);
+
   return (
-    <>
-      <MyInput>
-        <Input
-          ref={inputRef}
-          sx={{ height: "52px" }}
-          className="searchBar"
-          variant="outlined"
-          color="neutral"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={handleInputEnter}
-          placeholder="도서 검색"
-          startDecorator={
-            <Button
-              sx={{ height: "100%" }}
-              variant="soft"
-              color="neutral"
-              startDecorator={<SearchIcon />}
-              onClick={handleInputBtn}
-            ></Button>
-          }
-        />
-      </MyInput>
-    </>
+    <MyInput className={searchClass}>
+      <Input
+        ref={inputRef}
+        sx={{ height: "52px" }}
+        className="searchBar"
+        variant="outlined"
+        color="neutral"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={handleInputEnter}
+        placeholder="도서 검색"
+        startDecorator={
+          <Button
+            sx={{ height: "100%" }}
+            variant="soft"
+            color="neutral"
+            startDecorator={<SearchIcon />}
+            onClick={handleInputBtn}
+          ></Button>
+        }
+      />
+    </MyInput>
   );
 }
 const MyInput = styled.div`
@@ -64,5 +69,8 @@ const MyInput = styled.div`
   .searchBar {
     width: 85%;
     padding-left: 10px;
+  }
+  &.subPage {
+    margin: 5px 0;
   }
 `;

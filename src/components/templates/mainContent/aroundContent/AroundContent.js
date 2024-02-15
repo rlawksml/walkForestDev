@@ -15,6 +15,7 @@ import ToastMessage from "../../ToastMessage";
 import ToolTips from "../../ToolTips";
 import AroundItems from "./AroundItems";
 import { LoginContext } from "../../../../utils/providers/login/LoginContext";
+import { useSelector } from "react-redux";
 
 export default function AroundContent({ handleClickOpen }) {
   const defaultData = [
@@ -68,6 +69,8 @@ export default function AroundContent({ handleClickOpen }) {
   );
 
   const { isLogined, setIsLogined } = useContext(LoginContext);
+
+  const favoriteList = useSelector((state) => state.favorites.favorites);
 
   const [aroundData, setAroundData] = useState();
   const [categoryState, setCategoryState] = useState(0);
@@ -179,7 +182,16 @@ export default function AroundContent({ handleClickOpen }) {
 
       {isLogined ? (
         <CusGrid container>
-          {aroundData?.map((item, index) => {
+          {favoriteList?.map((item, index) => {
+            return (
+              <>
+                <Typography>{item.title}</Typography>;
+                <Typography>{item.thumbnail}</Typography>;
+                <Typography>{item.authors}</Typography>;
+              </>
+            );
+          })}
+          {/* {aroundData?.map((item, index) => {
             const isActive = aroundItemState === index;
             return (
               <AroundItems
@@ -201,7 +213,7 @@ export default function AroundContent({ handleClickOpen }) {
                 handleAroundItemDetail={handleAroundItemDetail}
               />
             );
-          })}
+          })} */}
         </CusGrid>
       ) : (
         <Empty>로그인 후 사용해보세요</Empty>
@@ -241,7 +253,7 @@ const Title = styled(Typography)`
   align-items: center;
   width: 100%;
 
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
   line-height: 24px;
 

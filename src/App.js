@@ -17,8 +17,8 @@ function App() {
         <SearchProvider>
           <LoginProvider>
             <ModalProvider>
-              {/* <BrowserRouter basename={process.env.PUBLIC_URL}> */}
-              <BrowserRouter>
+              <BrowserRouter basename={process.env.PUBLIC_URL}>
+                {/* <BrowserRouter> */}
                 <Router />
               </BrowserRouter>
             </ModalProvider>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import libraryData from "../../../utils/librarySeoul/seoulCurrentLibrary.json";
 import axios from "axios";
+import styled from "styled-components";
+import { Typography } from "@mui/material";
 
 export default function KakaoMap() {
   let MAPKEY = process.env.REACT_APP_KAKAO_JS_API_KEY;
@@ -131,8 +133,19 @@ export default function KakaoMap() {
   }, []);
 
   return (
-    <div>
-      <div id="map" style={{ width: "500px", height: "400px" }}></div>
-    </div>
+    <MapContainer>
+      <MapView id="map"></MapView>
+    </MapContainer>
   );
 }
+
+const MapContainer = styled.div``;
+
+const MapView = styled.div`
+  width: 100%;
+  height: 400px;
+  @media (min-width: 481px) {
+    max-width: 600px;
+    height: 600px;
+  }
+`;

@@ -45,6 +45,7 @@ export default function Login({
     const data = new FormData(event.currentTarget);
 
     let userData = LoginLocalGet();
+
     if (userData?.map((item) => (item.id === id ? true : false))) {
       let loginuser = userData.filter((item) => item.id === id);
       if (loginuser[0].pw === pw) {
@@ -196,17 +197,27 @@ export default function Login({
 
 const LoginCt = styled.div`
   position: fixed;
-  top: 80px;
-  right: 20%;
+
+  top: 0;
+
   background: #fff;
-  height: 50%;
-  width: 30%;
+  height: 100%;
+  width: 100%;
   z-index: 1;
-  border: 1px solid #dcdcdc;
-  border-radius: 10px;
-  box-shadow: var(--joy-shadowRing, 0 0 #000),
-    0px 1px 2px 0px
-      rgba(var(--joy-shadowChannel, 21 21 21) / var(--joy-shadowOpacity, 0.08));
+
+  @media (min-width: 481px) {
+    top: 80px;
+    right: 20%;
+    height: 50%;
+    width: 30%;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    box-shadow: var(--joy-shadowRing, 0 0 #000),
+      0px 1px 2px 0px
+        rgba(
+          var(--joy-shadowChannel, 21 21 21) / var(--joy-shadowOpacity, 0.08)
+        );
+  }
 `;
 
 const LoginOtherAcc = styled.div`

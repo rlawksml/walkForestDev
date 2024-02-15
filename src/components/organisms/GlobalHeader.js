@@ -14,9 +14,11 @@ import { useContext, useEffect, useState } from "react";
 import { isBrowser } from "react-device-detect";
 import DropMenu from "../templates/menus/DropMenu";
 import SideMenu from "../templates/menus/SideMenu";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import Divider from "@mui/joy/Divider";
 import { LoginContext } from "../../utils/providers/login/LoginContext";
+import { LoginSessionGetInfo } from "../../utils/providers/login/LoginSession";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 export default function GlobalHeader({ handleLoginPop }) {
   let { isLogined, setIsLogined, userInfo, setUserInfo } =
@@ -35,6 +37,9 @@ export default function GlobalHeader({ handleLoginPop }) {
   };
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { userId, useruuid, nickname } = LoginSessionGetInfo();
 
   useEffect(() => {}, []);
 
@@ -44,16 +49,23 @@ export default function GlobalHeader({ handleLoginPop }) {
         {isBrowser ? (
           <Container maxWidth={"lg"}>
             <MyToolBar>
-              <MyMenu
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menuSearch"
-                sx={{ mr: 2 }}
-                onClick={(e) => {
-                  setSideMenuShow((prev) => !prev);
-                }}
-              ></MyMenu>
+              {location.pathname !== "/" ? (
+                <MyMenu
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menuSearch"
+                  sx={{ mr: 2 }}
+                  onClick={(e) => {
+                    navigate(-1);
+                  }}
+                >
+                  <ArrowBackIosIcon />
+                </MyMenu>
+              ) : (
+                <></>
+              )}
+
               <Typography
                 align="center"
                 variant="h8"
@@ -100,18 +112,23 @@ export default function GlobalHeader({ handleLoginPop }) {
           </Container>
         ) : (
           <MyToolBar>
-            <MyMenu
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menuSearch"
-              sx={{ mr: 2 }}
-              onClick={(e) => {
-                setSideMenuShow((prev) => !prev);
-              }}
-            >
-              {/* <MenuTools /> */}
-            </MyMenu>
+            {location.pathname !== "/" ? (
+              <MyMenu
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menuSearch"
+                sx={{ mr: 2 }}
+                onClick={(e) => {
+                  navigate(-1);
+                }}
+              >
+                <ArrowBackIosIcon />
+              </MyMenu>
+            ) : (
+              <></>
+            )}
+
             <Typography
               align="center"
               variant="h8"
@@ -123,7 +140,7 @@ export default function GlobalHeader({ handleLoginPop }) {
             </Typography>
             {isLogined ? (
               <MyMenu
-                size="large"
+                size={isBrowser ? "large" : "small"}
                 edge="start"
                 color="inherit"
                 aria-label="menu"
@@ -132,7 +149,7 @@ export default function GlobalHeader({ handleLoginPop }) {
                   handleDropMenu(e);
                 }}
               >
-                {/* <Avatar sx={{ width: 30, height: 30 }} /> */}
+                {nickname}님
               </MyMenu>
             ) : (
               <LoginBtn

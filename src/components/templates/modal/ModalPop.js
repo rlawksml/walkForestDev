@@ -15,14 +15,14 @@ import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import styled from "styled-components";
+import ToastMessage from "../ToastMessage";
 
-export default function ModalPop({ modalOpen, setModalOpen, modalInfo }) {
-  // const [moodState, setMoodState] = useState("wit");
-  const [moodState, setMoodState] = useState("lively");
-  const handleMoodBtn = (e) => {
-    setMoodState(e.target.id);
-    return;
-  };
+export default function ModalPop({
+  modalOpen,
+  setModalOpen,
+  modalInfo,
+  setShowToast,
+}) {
   return (
     <>
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
@@ -88,7 +88,7 @@ export default function ModalPop({ modalOpen, setModalOpen, modalInfo }) {
                 />
                 {/* <Input required /> */}
               </FormControl>
-              <FormControl>
+              {/* <FormControl>
                 <FormLabel>태그 추가</FormLabel>
                 <ResponseCt>
                   <ResponseTextCt></ResponseTextCt>
@@ -104,8 +104,15 @@ export default function ModalPop({ modalOpen, setModalOpen, modalInfo }) {
                     </Button>
                   </ButtonCt>
                 </ResponseCt>
-              </FormControl>
-              <Button type="submit">사용하러 가기</Button>
+              </FormControl> */}
+              <Button
+                onClick={() => {
+                  setShowToast((prev) => !prev);
+                }}
+                type="submit"
+              >
+                사용하러 가기
+              </Button>
             </CusStack>
           </form>
         </ModalDialog>

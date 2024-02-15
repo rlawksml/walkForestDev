@@ -38,29 +38,27 @@ export default function BannerTop() {
   };
 
   return (
-    <>
-      <BannerSection>
-        <div bg={thum} className="BannerCt">
-          <div
-            onClick={() => {
-              window.open(url);
-            }}
-            className="imgCt"
-          >
-            <img src={thum} alt={title}></img>
-          </div>
-          <div className="contentCt">
-            <MyChip label="primary" color="primary" variant="outlined">
-              오늘의 추천
-            </MyChip>
-            <Title variant="h4">{title}</Title>
-            <Typography className="content" color={"black"} variant="h8">
-              {handleLength()}
-            </Typography>
-          </div>
+    <BannerSection>
+      <div bg={thum} className="BannerCt">
+        <MyChip label="primary" color="primary" variant="outlined">
+          오늘의 추천
+        </MyChip>
+        <div
+          onClick={() => {
+            window.open(url);
+          }}
+          className="imgCt"
+        >
+          <img src={thum} alt={title}></img>
         </div>
-      </BannerSection>
-    </>
+        <div className="contentCt">
+          <Title variant="h4">{title}</Title>
+          <Typography className="content" color={"black"} variant="h8">
+            {handleLength()}
+          </Typography>
+        </div>
+      </div>
+    </BannerSection>
   );
 }
 
@@ -79,6 +77,8 @@ const Title = styled(Typography)`
   font-weight: 700;
   letter-spacing: 0.01em;
   margin-bottom: 10px;
+  word-break: keep-all;
+  text-align: center;
 `;
 
 const BannerSection = styled.div`
@@ -87,7 +87,8 @@ const BannerSection = styled.div`
   color: #fff;
   font-weight: bold;
   width: 100%;
-  height: 350px;
+  // height: 350px;
+  padding: 60px 50px 40px;
   display: flex;
 
   align-items: center;
@@ -102,15 +103,20 @@ const BannerSection = styled.div`
     background-color: #81c9a1;
     width: 80%;
     height: 100%;
-    border-radius: 50px;
+    // border-radius: 50px;
+    border-radius: 5px;
     position: absolute;
-    top: 15%;
+    // top: 15%;
+    top: -5%;
     left: 50%;
     transform: translateX(-50%);
   }
 
   & .BannerCt {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     z-index: 1;
     .imgCt {
       &:hover {
@@ -129,9 +135,11 @@ const BannerSection = styled.div`
 
       .content {
         width: 250px;
+        color: #555;
         word-break: keep-all;
         font-size: 14px;
-        font-weight: 500;
+        line-height: 18px;
+        font-weight: 600;
       }
     }
   }

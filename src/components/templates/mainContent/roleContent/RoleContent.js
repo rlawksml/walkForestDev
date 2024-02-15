@@ -74,7 +74,6 @@ export default function RoleContent({ handleClickOpen }) {
   // 추천 아이템 클릭시 오픈 함수
   const handleUsesItemDetail = (role) => {
     setModalOpen((prev) => !prev);
-
     setModalInfo(role);
   };
 
@@ -88,10 +87,8 @@ export default function RoleContent({ handleClickOpen }) {
   return (
     <RoleSection>
       <Title variant="">
-        <img src={emojiFire} alt="불이미지"></img> 오늘은 어떤 것으로{" "}
-        {"         "}
+        <img src={emojiFire} alt="불이미지"></img> 오늘은 어떤 것으로
         <Typography sx={{ margin: "0 0 0 7px" }} variant="" color={"primary"}>
-          {"   "}
           시작
         </Typography>
         해 볼까요?
@@ -124,7 +121,13 @@ export default function RoleContent({ handleClickOpen }) {
         })}
 
         {isLogined && (
-          <RoleListItem className="roleUser">
+          <RoleListItem
+            onClick={() => {
+              setModalInfo(null);
+              setModalOpen((prev) => !prev);
+            }}
+            className="roleUser"
+          >
             <RoleImg variant="circular" src={UserRole.img} />
             <RoelName variant="subtitle1">{UserRole.name}</RoelName>
           </RoleListItem>
@@ -212,9 +215,10 @@ const Title = styled(Typography)`
   align-items: center;
   width: 100%;
 
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
   line-height: 24px;
+  letter-spacing: -0.75px;
 
   margin-bottom: 20px;
 

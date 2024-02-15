@@ -1,7 +1,7 @@
 import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/joy";
 import Input from "@mui/joy/Input";
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { ModalContext } from "../../../utils/providers/modal/ModalContext";
 import Faq from "../../pages/docs/Faq";
@@ -49,7 +49,7 @@ export default function Main() {
 
   return (
     <>
-      <Container maxWidth={"lg"}>
+      <MyContainer maxWidth={"lg"}>
         <BannerTop />
         <MainSearch />
         <RoleContent
@@ -65,8 +65,9 @@ export default function Main() {
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}
         />
+        <MapText variant="h8">가까운 도서관 찾기</MapText>
         <MapSection />
-      </Container>
+      </MyContainer>
 
       {openDia && (
         <Dialogs
@@ -81,3 +82,13 @@ export default function Main() {
     </>
   );
 }
+
+const MyContainer = styled(Container)`
+  padding-bottom: 50px;
+`;
+
+const MapText = styled(Typography)`
+  display: block;
+  margin: 5px 0 20px;
+  font-weight: 600;
+`;

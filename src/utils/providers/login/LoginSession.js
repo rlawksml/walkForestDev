@@ -10,6 +10,14 @@ export function LoginSessionGet() {
   return sessionStorage.getItem("loginState") === "true";
 }
 
+export function LoginSessionGetInfo() {
+  const userInfo = { userId: "", useruuid: "", nickname: "" };
+  userInfo.userId = sessionStorage.getItem("id");
+  userInfo.useruuid = sessionStorage.getItem("uuid");
+  userInfo.nickname = sessionStorage.getItem("nickname");
+  return userInfo;
+}
+
 // 로그인 유지를 위한 세션
 export function LoginSessionSet(id, nickname, uuid, loginState) {
   //   set은 key

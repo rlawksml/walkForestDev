@@ -57,4 +57,5 @@ export default function Home({ isLoggedIn }) {
 
 const Wrapper = styled.div`
   background: #fbfcff;
+  height: 100vh;
 `;

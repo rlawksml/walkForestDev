@@ -7,18 +7,22 @@ import styled from "styled-components";
 import { searchBook } from "../../../../utils/book";
 import { SearchContext } from "../../../../utils/providers/search/SearchContext";
 import Empty from "../../Empty";
-import { Button, Skeleton } from "@mui/material";
+import { Button, Skeleton, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { addFavorite } from "../../../../actions";
+import { isBrowser } from "react-device-detect";
+import { BookListSessionSet } from "../../../../utils/FavBookList";
 
-export default function BookList({}) {
+export default function BookList({ setShowToast, setToastMessage }) {
   const itemData = [];
 
   const [bookList, setBookList] = useState();
   const { inputValue, setInputValue } = useContext(SearchContext);
 
   const [favoriteList, setFavoriteList] = useState([]);
+
+  const favoriteListReducer = useSelector((state) => state.favorites.favorites);
 
   const dispatch = useDispatch();
   // redux 페이지 관리
@@ -35,7 +39,7 @@ export default function BookList({}) {
       });
     };
     getData();
-  }, []);
+  }, [inputValue]);
 
   const handleFavList = (item) => {
     const newItem = {
@@ -51,19 +55,20 @@ export default function BookList({}) {
     // 중복되지 않는 경우에만 새로운 아이템 추가
     if (!isExist) {
       setFavoriteList((prevList) => [...prevList, newItem]);
+      setShowToast((prev) => !prev);
+      setToastMessage("📌 나의 도서 목록에 추가되었습니다");
+      BookListSessionSet(favoriteListReducer);
     } else {
-      console.log("이미 추가된 아이템입니다.");
+      setShowToast((prev) => !prev);
+      setToastMessage("❌ 이미 추가된 아이템입니다");
     }
   };
 
-  useEffect(() => {
-    console.log(favoriteList);
-  }, [favoriteList]);
-
   return (
     <Box>
+      <CountBook>총 {bookList?.length} 개의 도서 검색</CountBook>
       {bookList && bookList.length > 0 ? (
-        <ImageList variant="masonry" cols={3} gap={8}>
+        <ImageList variant="masonry" cols={isBrowser ? 4 : 2} gap={8}>
           {bookList.map((item, index) => (
             <MyImageListItem
               onClick={() => {
@@ -120,4 +125,11 @@ const MyImageListItem = styled(ImageListItem)`
       background-color: rgba(0, 0, 0, 0.7);
     }
   }
+`;
+
+const CountBook = styled(Typography)`
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  margin: 5px 0;
 `;

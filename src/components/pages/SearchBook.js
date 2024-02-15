@@ -10,6 +10,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import YoutubeList from "../templates/mainContent/BookList/YoutubeList";
 import Login from "../templates/login/Login";
+import ToastMessage from "../templates/ToastMessage";
+import MainSearch from "../organisms/MainSearch";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,6 +50,7 @@ export default function SearchBook({ isLoggedIn }) {
   const [loginPopState, setLoginPopState] = useState(false);
 
   const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
   const [openMessage, setOpenMeesage] = useState(false);
 
   const handleLoginPop = () => {
@@ -68,6 +71,7 @@ export default function SearchBook({ isLoggedIn }) {
         handleLoginPop={handleLoginPop}
       />
       <MyContainer maxWidth={"sm"}>
+        <MainSearch searchClass={"subPage"} />
         <Box sx={{ width: "100%" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -80,13 +84,21 @@ export default function SearchBook({ isLoggedIn }) {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <BookList />
+            <BookList
+              setShowToast={setShowToast}
+              setToastMessage={setToastMessage}
+            />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <YoutubeList />
           </CustomTabPanel>
         </Box>
       </MyContainer>
+
+      {showToast && (
+        <ToastMessage text={toastMessage} setShowToast={setShowToast} />
+      )}
+
       {loginPopState && (
         <Login
           setToastMessage={setToastMessage}
@@ -100,6 +112,7 @@ export default function SearchBook({ isLoggedIn }) {
 
 const Wrapper = styled.div`
   background: #fbfcff;
+  height: 100vh;
 `;
 
 const MyContainer = styled(Container)`
