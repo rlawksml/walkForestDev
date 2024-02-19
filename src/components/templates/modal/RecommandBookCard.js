@@ -71,7 +71,9 @@ export default function RecommandBookCard({
 
               <CardContent orientation="vertical">
                 <div>
-                  <Typography level="body-xs">{desc}</Typography>
+                  <Typography sx={{ wordBreak: "keep-all" }} level="body-xs">
+                    {desc}
+                  </Typography>
                 </div>
                 <Button
                   variant="outlined"
@@ -103,7 +105,8 @@ const MyModal = styled(Modal)`
 `;
 
 const BookImg = styled.img`
-  width: 80%;
+  width: 70%;
+  max-width: 400px;
   margin: 0 auto;
 `;
 

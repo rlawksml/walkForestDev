@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { searchBook } from "../../../utils/book.js";
+import { recommandGpt } from "../../../utils/gpt.js";
 
 export default function BannerTop() {
   let randomNum = Math.floor(Math.random() * 4);
@@ -28,6 +29,12 @@ export default function BannerTop() {
     };
     getData();
   }, []);
+
+  // recommandGpt("중학생이 가장 많이보는 경제 도서 한권만 추천").then(
+  //   (response) => {
+  //     console.log("response", response);
+  //   }
+  // );
 
   const handleLength = () => {
     if (desc && desc.length >= 85) {
