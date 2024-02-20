@@ -3,7 +3,7 @@ import libraryData from "../../../utils/librarySeoul/seoulCurrentLibrary.json";
 import axios from "axios";
 import styled from "styled-components";
 import { Typography } from "@mui/material";
-
+import "../../templates/map/map.css";
 export default function KakaoMap() {
   let MAPKEY = process.env.REACT_APP_KAKAO_JS_API_KEY;
 
@@ -15,9 +15,7 @@ export default function KakaoMap() {
 
     const onLoadKakaoAPI = () => {
       // load 없으면 오류 발생 undefined
-      console.log("여기부터시작");
       window.kakao.maps.load(() => {
-        console.log("여기부터시작2 로드");
         var container = document.getElementById("map");
         var options = {
           center: new window.kakao.maps.LatLng(
@@ -55,11 +53,11 @@ export default function KakaoMap() {
           title: item.lbrry_name,
           webAddress: item.hmpg_url,
           address: item.adres,
+          tel: item.tel_no,
+          restDate: item.fdrm_close_date,
           time: item.op_time,
           latlng: new window.kakao.maps.LatLng(item.xcnts, item.ydnts),
         }));
-
-        console.log(positions);
 
         // 마커 이미지의 이미지 주소입니다
         var imageSrc =
@@ -86,13 +84,12 @@ export default function KakaoMap() {
 
           // 마커에 표시할 인포윈도우를 생성합니다
           var infowindow = new window.kakao.maps.InfoWindow({
-            // title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-            // webAddress: positions[i].webAddress,
-            // address: positions[i].address,
-            // time: positions[i].time,
-            content: `<div className="mapInfo">
-            <p className="title">${positions[i].title}</p>
-            <p className="time">${positions[i].time}</p>
+            content: `<div class="mapInfo">
+            <p class="title">${positions[i].title}</p>
+            <p class="time">${positions[i].address}</p>
+            <p class="time">운영시간 : ${positions[i].time}</p>
+            <p class="time">휴무일 : ${positions[i].restDate}</p>
+            <p class="time">전화번호 : ${positions[i].tel}</p>
             </div>`,
           });
 
@@ -106,7 +103,6 @@ export default function KakaoMap() {
             "mouseout",
             makeOutListener(infowindow)
           );
-          window.kakao.map.event.addListener();
         }
 
         // 인포윈도우를 표시하는 클로저를 만드는 함수입니다

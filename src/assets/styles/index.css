@@ -64,22 +64,3 @@ code {
 /* #6b8a47 */
 /* #f6c915 */
 /* #eae3c0 */
-
-.mapInfo {
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  border: 1px solid blue !important;
-}
-.mapInfo.time {
-  font-size: 12px;
-  font-weight: 400;
-  border: 1px solid blue;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  border: 1px solid blue !important;
-}
-.mapInfo.address {
-  font-size: 12px;
-  font-weight: 400;
-  border: 1px solid red;
-}
