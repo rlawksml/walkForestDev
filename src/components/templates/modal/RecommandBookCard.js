@@ -32,7 +32,11 @@ export default function RecommandBookCard({
   }, []);
   return (
     <>
-      <MyModal fullSize open={modalOpen} onClose={() => setModalOpen(false)}>
+      <MyModal
+        fullsize="true"
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      >
         <ModalDialog>
           <CloseIcon
             className="closeBtn"

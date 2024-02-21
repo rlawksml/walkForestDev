@@ -31,10 +31,8 @@ export default function BannerTop() {
     getData();
   }, []);
 
-  // recommandGpt("중학생이 가장 많이보는 경제 도서 한권만 추천").then(
-  //   (response) => {
-  //     console.log("response", response);
-  //   }
+  // recommandGpt(
+  //   "2010~2020까지 중학생이 가장 많이보는 경제 도서 한권 추천 제목만 말해줘"
   // );
 
   const handleLength = () => {
@@ -89,18 +87,18 @@ export default function BannerTop() {
 }
 
 const MyChip = styled(Chip)`
-  background: #ffecb8;
+  background: #78daa38f;
   border: none;
   font-size: 16px;
   font-weight: 600;
-  color: #ffb900;
-  padding: 15px 30px;
+  color: #3ab06e;
+  padding: 10px 30px;
   margin-bottom: 10px;
   z-index: 1;
 
-  margin: 10px auto;
+  margin: 0px auto 10px;
   @media (min-width: 481px) {
-    margin: 50px auto;
+    margin: 0px auto 50px;
   }
 `;
 
@@ -176,7 +174,7 @@ const BannerSection = styled.div`
         content: "";
         width: 280px;
         height: 280px;
-        background: #dcdcdc;
+        background: #dcdcdc59;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -192,7 +190,7 @@ const BannerSection = styled.div`
 
       img {
         width: 100%;
-        box-shadow: 5px 5px 5px #dcdcdc;
+        box-shadow: 2px 3px 10px #b6b6b6;
       }
     }
 
@@ -220,16 +218,9 @@ const BannerSection = styled.div`
         width: 250px;
         margin-right: 150px;
         &:after {
-          content: "";
           width: 380px;
           height: 380px;
-          background: #dcdcdc;
-          position: absolute;
-          top: 50%;
-          left: 50%;
           border-radius: 300px;
-          transform: translate(-50%, -50%);
-          z-index: -1;
         }
       }
       .contentCt {

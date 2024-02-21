@@ -8,7 +8,6 @@ export const recommandBook = async (keyword) => {
   let drCodeList = [11, 6, 5, 4];
 
   recommandRandom = Math.floor(Math.random() * 4);
-  console.log(drCodeList[recommandRandom]);
 
   try {
     const response = await axios.get(
@@ -27,7 +26,5 @@ export const recommandBook = async (keyword) => {
   } catch (error) {
     console.error("API 호출 중 에러 발생:", error);
   }
-
-  console.log("bookList", bookList);
   return bookList;
 };
