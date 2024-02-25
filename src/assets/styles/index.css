@@ -30,7 +30,7 @@ code {
 * {
   /* 세로 스크롤바를 작게 만들기 */
   ::-webkit-scrollbar {
-    width: 5px;
+    /* width: 5px; */
   }
 
   /* 스크롤바의 배경색 */
