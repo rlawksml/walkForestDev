@@ -38,7 +38,12 @@ export default function LibararyData() {
     <LlbContent>
       {curlibraryItem?.map((item, index) => {
         return (
-          <LibItemBox key={index}>
+          <LibItemBox
+            onClick={() => {
+              window.open(item.hmpg_url);
+            }}
+            key={index}
+          >
             <LibTitle>{item.lbrry_name}</LibTitle>
             <LibOpen color={"error"}>{item.fdrm_close_date}</LibOpen>
             <LibUrl color={"primary"}>{item.hmpg_url}</LibUrl>
@@ -71,6 +76,11 @@ const LibItemBox = styled.div`
   border: 1px solid #dcdcdc;
   border-radius: 10px;
   margin: 7.5px 0;
+
+  &:hover {
+    cursor: pointer;
+    background: #f6c915;
+  }
 `;
 
 const LibTitle = styled(Typography)`

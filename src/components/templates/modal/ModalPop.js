@@ -88,23 +88,6 @@ export default function ModalPop({
                 />
                 {/* <Input required /> */}
               </FormControl>
-              {/* <FormControl>
-                <FormLabel>태그 추가</FormLabel>
-                <ResponseCt>
-                  <ResponseTextCt></ResponseTextCt>
-                  <ButtonCt>
-                    <Button size="sm" variant="">
-                      <AutoFixHighIcon />
-                    </Button>
-                    <Button size="sm" variant="">
-                      <AutoAwesomeMotionIcon />
-                    </Button>
-                    <Button size="sm" variant="">
-                      <FingerprintIcon />
-                    </Button>
-                  </ButtonCt>
-                </ResponseCt>
-              </FormControl> */}
               <Button
                 onClick={() => {
                   setShowToast((prev) => !prev);

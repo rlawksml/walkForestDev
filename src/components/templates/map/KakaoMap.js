@@ -3,15 +3,11 @@ import libraryData from "../../../utils/librarySeoul/seoulCurrentLibrary.json";
 import axios from "axios";
 import styled from "styled-components";
 import { Typography } from "@mui/material";
-
+import "../../templates/map/map.css";
 export default function KakaoMap() {
   let MAPKEY = process.env.REACT_APP_KAKAO_JS_API_KEY;
 
-  const [libraryList, setLibraryList] = useState();
-
   useEffect(() => {
-    setLibraryList(libraryData.DATA);
-
     const kakaoMapScript = document.createElement("script");
     kakaoMapScript.async = false;
     kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${MAPKEY}&autoload=false`;
@@ -28,8 +24,11 @@ export default function KakaoMap() {
           ),
           level: 3,
         };
+
+        // map 정의
         var map = new window.kakao.maps.Map(container, options);
 
+        // 현재 위치 찾기
         if (navigator.geolocation) {
           // GeoLocation을 이용해서 접속 위치를 얻어옵니다
           navigator.geolocation.getCurrentPosition(function (position) {
@@ -52,6 +51,11 @@ export default function KakaoMap() {
 
         var positions = libraryData.DATA.map((item) => ({
           title: item.lbrry_name,
+          webAddress: item.hmpg_url,
+          address: item.adres,
+          tel: item.tel_no,
+          restDate: item.fdrm_close_date,
+          time: item.op_time,
           latlng: new window.kakao.maps.LatLng(item.xcnts, item.ydnts),
         }));
 
@@ -77,23 +81,59 @@ export default function KakaoMap() {
             image: markerImage, // 마커 이미지
             clickable: true,
           });
+
+          // 마커에 표시할 인포윈도우를 생성합니다
+          var infowindow = new window.kakao.maps.InfoWindow({
+            content: `<div class="mapInfo">
+            <p class="title">${positions[i].title}</p>
+            <p class="time">${positions[i].address}</p>
+            <p class="time">운영시간 : ${positions[i].time}</p>
+            <p class="time">휴무일 : ${positions[i].restDate}</p>
+            <p class="time">전화번호 : ${positions[i].tel}</p>
+            </div>`,
+          });
+
+          window.kakao.maps.event.addListener(
+            marker,
+            "mouseover",
+            makeOverListener(map, marker, infowindow)
+          );
+          window.kakao.maps.event.addListener(
+            marker,
+            "mouseout",
+            makeOutListener(infowindow)
+          );
         }
 
-        // 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
-        var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-          iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+        // 인포윈도우를 표시하는 클로저를 만드는 함수입니다
+        function makeOverListener(map, marker, infowindow) {
+          return function () {
+            infowindow.open(map, marker);
+          };
+        }
 
-        // 인포윈도우를 생성합니다
-        var infowindow = new window.kakao.maps.InfoWindow({
-          content: iwContent,
-          removable: iwRemoveable,
-        });
+        // 인포윈도우를 닫는 클로저를 만드는 함수입니다
+        function makeOutListener(infowindow) {
+          return function () {
+            infowindow.close();
+          };
+        }
+
+        // // 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
+        // var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        //   iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+        // // 인포윈도우를 생성합니다
+        // var infowindow = new window.kakao.maps.InfoWindow({
+        //   content: iwContent,
+        //   removable: iwRemoveable,
+        // });
 
         // 마커에 클릭이벤트를 등록합니다
-        window.kakao.maps.event.addListener(marker, "click", function () {
-          // 마커 위에 인포윈도우를 표시합니다
-          infowindow.open(map, marker);
-        });
+        // window.kakao.maps.event.addListener(marker, "click", function () {
+        //   // 마커 위에 인포윈도우를 표시합니다
+        //   infowindow.open(map, marker);
+        // });
 
         // 지도에 마커와 인포윈도우를 표시하는 함수입니다
         function displayMarker(locPosition) {
@@ -110,18 +150,6 @@ export default function KakaoMap() {
         // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
         var zoomControl = new window.kakao.maps.ZoomControl();
         map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
-
-        // 위치 허용 안했을 표시 이동
-        // 마커가 표시될 위치입니다
-        // var markerPosition = new window.kakao.maps.LatLng(
-        //   37.55292879706055,
-        //   126.96941027090685
-        // );
-
-        // 마커를 생성합니다
-        // var marker = new window.kakao.maps.Marker({
-        //   position: markerPosition,
-        // });
 
         // 마커가 지도 위에 표시되도록 설정합니다
         marker.setMap(map);
