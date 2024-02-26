@@ -19,14 +19,14 @@ export const recommandGpt = async (keyword) => {
     model: "gpt-3.5-turbo-0613",
     messages: [{ role: "user", content: keyword }],
     temperature: 0,
-    max_tokens: 1000,
+    max_tokens: 3000,
     stream: true,
   });
   for await (const chunk of stream) {
     aws += chunk.choices[0]?.delta?.content || "";
   }
 
-  // console.log(aws);
+  console.log(aws);
   return aws;
 };
 

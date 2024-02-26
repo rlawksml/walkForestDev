@@ -31,9 +31,7 @@ export default function BannerTop() {
     getData();
   }, []);
 
-  // recommandGpt(
-  //   "2010~2020까지 중학생이 가장 많이보는 경제 도서 한권 추천 제목만 말해줘"
-  // );
+  // recommandGpt("가장 최근 성인 권장도서 10개 제목만 알려줘");
 
   const handleLength = () => {
     if (isBrowser) {

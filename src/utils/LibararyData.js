@@ -4,12 +4,17 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import libraryData from "./librarySeoul/seoulCurrentLibrary.json";
 import styled from "styled-components";
+import { catchPosition } from "../components/templates/map/KakaoMap";
+import Input from "@mui/joy/Input";
 
-export default function LibararyData() {
+export default function LibararyData({ setSelectedPosition }) {
   const [countPage, setCountPage] = useState();
   const [curPage, setCurPage] = useState(1);
   const [libraryList, setLibraryList] = useState();
   const [curlibraryItem, setcurLibraryItem] = useState();
+  const [llbSearch, setLlbSearchState] = useState("");
+
+  const [editData, setEditData] = useState([]);
 
   //   5개씩 끊어서 보여주기
   const perPage = 5;
@@ -24,9 +29,29 @@ export default function LibararyData() {
 
   useEffect(() => {
     setcurLibraryItem(
-      libraryData.DATA.slice(curPage * perPage - perPage, curPage * perPage)
+      editData.length > 0
+        ? editData.slice(curPage * perPage - perPage, curPage * perPage)
+        : libraryData.DATA.slice(curPage * perPage - perPage, curPage * perPage)
     );
   }, [curPage]);
+
+  useEffect(() => {
+    let editData = libraryData.DATA.filter((item, index) => {
+      return item.lbrry_name.includes(llbSearch);
+    });
+
+    setEditData(
+      libraryData.DATA.filter((item, index) => {
+        return item.lbrry_name.includes(llbSearch);
+      })
+    );
+
+    setcurLibraryItem(
+      editData.slice(curPage * perPage - perPage, curPage * perPage)
+    );
+
+    setCountPage(Math.floor(editData.length / perPage));
+  }, [llbSearch]);
 
   useEffect(() => {
     setLibraryList(libraryData.DATA);
@@ -36,17 +61,34 @@ export default function LibararyData() {
 
   return (
     <LlbContent>
+      <MyInput
+        placeholder="도서관을 검색해보세요"
+        color="neutral"
+        size="sm"
+        variant="soft"
+        value={llbSearch}
+        onChange={(e) => {
+          setLlbSearchState(e.target.value);
+        }}
+      />
       {curlibraryItem?.map((item, index) => {
         return (
           <LibItemBox
             onClick={() => {
-              window.open(item.hmpg_url);
+              setSelectedPosition({ x: item.xcnts, y: item.ydnts });
             }}
             key={index}
           >
             <LibTitle>{item.lbrry_name}</LibTitle>
             <LibOpen color={"error"}>{item.fdrm_close_date}</LibOpen>
-            <LibUrl color={"primary"}>{item.hmpg_url}</LibUrl>
+            <LibUrl
+              onClick={() => {
+                window.open(item.hmpg_url);
+              }}
+              color={"primary"}
+            >
+              {item.hmpg_url}
+            </LibUrl>
           </LibItemBox>
         );
       })}
@@ -73,13 +115,14 @@ const LlbContent = styled.div`
 const LibItemBox = styled.div`
   border: 1px solid blue;
   padding: 5px 10px;
-  border: 1px solid #dcdcdc;
+  border: 2px solid #dcdcdc;
   border-radius: 10px;
   margin: 7.5px 0;
 
   &:hover {
     cursor: pointer;
-    background: #f6c915;
+    border: 2px solid #f6c915;
+    // background: #f6c915;
   }
 `;
 
@@ -119,4 +162,10 @@ const LibUrl = styled(Typography)`
 
 const MyStack = styled(Stack)`
   margin-top: auto;
+`;
+
+const MyInput = styled(Input)`
+  margin: 20px 0 15px;
+  height: 45px;
+  font-size: 14px;
 `;

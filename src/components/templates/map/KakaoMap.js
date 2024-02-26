@@ -4,7 +4,16 @@ import axios from "axios";
 import styled from "styled-components";
 import { Typography } from "@mui/material";
 import "../../templates/map/map.css";
-export default function KakaoMap() {
+
+export function catchPosition(item) {
+  let position = {
+    x: item.xcnts,
+    y: item.ydnts,
+  };
+  return position;
+}
+
+export default function KakaoMap({ selectedPosition, setSelectedPosition }) {
   let MAPKEY = process.env.REACT_APP_KAKAO_JS_API_KEY;
 
   useEffect(() => {
@@ -38,11 +47,11 @@ export default function KakaoMap() {
             var locPosition = new window.kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
 
             // 마커와 인포윈도우를 표시합니다
-            displayMarker(locPosition);
+
+            selectedPosition?.x > 0 ? panTo() : displayMarker(locPosition);
           });
         } else {
           // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-
           var locPosition = new window.kakao.maps.LatLng(33.450701, 126.570667),
             message = "geolocation을 사용할수 없어요..";
 
@@ -118,22 +127,13 @@ export default function KakaoMap() {
             infowindow.close();
           };
         }
-
-        // // 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
-        // var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        //   iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-        // // 인포윈도우를 생성합니다
-        // var infowindow = new window.kakao.maps.InfoWindow({
-        //   content: iwContent,
-        //   removable: iwRemoveable,
-        // });
-
-        // 마커에 클릭이벤트를 등록합니다
-        // window.kakao.maps.event.addListener(marker, "click", function () {
-        //   // 마커 위에 인포윈도우를 표시합니다
-        //   infowindow.open(map, marker);
-        // });
+        function panTo() {
+          const moveLatLon = new window.kakao.maps.LatLng(
+            selectedPosition.x,
+            selectedPosition.y
+          );
+          map.panTo(moveLatLon);
+        }
 
         // 지도에 마커와 인포윈도우를 표시하는 함수입니다
         function displayMarker(locPosition) {
@@ -158,7 +158,35 @@ export default function KakaoMap() {
 
     // 로드 될때 바로 실행
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
-  }, []);
+  }, [selectedPosition]);
+
+  // useEffect(() => {
+  //   const onLoadKakaoAPI = () => {
+  //     window.kakao.maps.load(() => {
+  //       var container = document.getElementById("map");
+  //       var options = {
+  //         center: new window.kakao.maps.LatLng(
+  //           37.55292879706055,
+  //           126.96941027090685
+  //         ),
+  //         level: 3,
+  //       };
+  //       // map 정의
+  //       var map = new window.kakao.maps.Map(container, options);
+
+  //       if (selectedPosition) {
+  //         const moveLatLon = new window.kakao.maps.LatLng(
+  //           selectedPosition?.y,
+  //           selectedPosition?.x
+  //         );
+  //         map.panTo(moveLatLon);
+  //         console.log(selectedPosition);
+  //       }
+  //     });
+  //   };
+  //   // 로드 될때 바로 실행
+  //   kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
+  // }, [selectedPosition]);
 
   return (
     <MapContainer>

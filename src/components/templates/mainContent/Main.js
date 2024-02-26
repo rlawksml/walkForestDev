@@ -19,6 +19,8 @@ import KakaoMap from "../map/KakaoMap";
 import MapSection from "./mapContent/MapSection";
 import LibararyData from "../../../utils/LibararyData";
 
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+
 export default function Main() {
   // 다이아로그 관련 state
   const [openDia, setOpenDia] = useState(false);
@@ -29,11 +31,8 @@ export default function Main() {
   // const [openFaq, setOpenFaq] = useState(false);
   const { modalOpen, setModalOpen } = useContext(ModalContext);
 
-  // 서비스이용약관
-  const [openServiceM, setOpenServiceM] = useState(false);
-
-  // 개인정보처리방침
-  const [openPersonM, setOpenPersonM] = useState(false);
+  // map 정보
+  const [selectedPosition, setSelectedPosition] = useState({ x: 0, y: 0 });
 
   const handleDialog = (title, desc) => {
     setOpenDia(true);
@@ -65,8 +64,21 @@ export default function Main() {
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}
         />
-        <MapText variant="h8">가까운 도서관 찾기</MapText>
-        <MapSection />
+        <MapText variant="h8">
+          가까운 도서관 찾기{" "}
+          <MyLocationIcon
+            onClick={() => {
+              setSelectedPosition({ x: 0, y: 0 });
+            }}
+            className="icon"
+            fontSize="small"
+            color="primary"
+          />
+        </MapText>
+        <MapSection
+          selectedPosition={selectedPosition}
+          setSelectedPosition={setSelectedPosition}
+        />
       </MyContainer>
 
       {openDia && (
@@ -88,7 +100,17 @@ const MyContainer = styled(Container)`
 `;
 
 const MapText = styled(Typography)`
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: start;
   margin: 5px 0 20px;
   font-weight: 600;
+
+  & .icon {
+    margin: 0 15px;
+    cursor: pointer;
+    &:hover {
+      color: tomato;
+    }
+  }
 `;
