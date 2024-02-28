@@ -18,6 +18,12 @@ import book2 from "../../../../assets/images/book2.jpg";
 import book3 from "../../../../assets/images/book3.jpg";
 import book4 from "../../../../assets/images/book4.jpg";
 
+import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
+import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import ScienceIcon from "@mui/icons-material/Science";
+import PaidIcon from "@mui/icons-material/Paid";
+
 export default function RoleContent({ handleClickOpen }) {
   const roleList = [
     {
@@ -87,11 +93,10 @@ export default function RoleContent({ handleClickOpen }) {
   return (
     <RoleSection>
       <Title variant="">
-        <img src={emojiFire} alt="불이미지"></img> 오늘은 어떤 것으로
+        <img src={emojiFire} alt="불이미지"></img> 이번주 분야별
         <Typography sx={{ margin: "0 0 0 7px" }} variant="" color={"primary"}>
-          시작
+          추천도서
         </Typography>
-        해 볼까요?
         {isBrowser ? (
           <ToolTips position={"right"} title={tipTitle} desc={tipDesc}>
             <CusNoticeIcon color="" />
@@ -114,7 +119,11 @@ export default function RoleContent({ handleClickOpen }) {
               }}
               key={index}
             >
-              <RoleImg variant="circular" src={role.img} />
+              <EmojiPeopleIcon />
+              <PsychologyAltIcon />
+              <MenuBookIcon />
+              <ScienceIcon />
+              <PaidIcon />
               <RoelName variant="subtitle1">{role.name}</RoelName>
             </RoleListItem>
           );

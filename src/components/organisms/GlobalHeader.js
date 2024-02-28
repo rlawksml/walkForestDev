@@ -53,7 +53,7 @@ export default function GlobalHeader({ handleLoginPop }) {
                 <MyMenu
                   size="large"
                   edge="start"
-                  color="inherit"
+                  color="success"
                   aria-label="menuSearch"
                   sx={{ mr: 2 }}
                   onClick={(e) => {
@@ -75,7 +75,7 @@ export default function GlobalHeader({ handleLoginPop }) {
                   navigate("/");
                 }}
               >
-                <Typography variant="h6">📖 BOOK-ROAD</Typography>
+                <Title variant="h6">📖 BOOK-ROAD</Title>
               </Typography>
               {isLogined ? (
                 <MyMenu
@@ -136,7 +136,7 @@ export default function GlobalHeader({ handleLoginPop }) {
               sx={{ flexGrow: 1, cursor: "pointer" }}
               onClick={() => navigate("/")}
             >
-              <Typography variant="h6">📖 BOOK-ROAD</Typography>
+              <Title variant="h6">📖 BOOK-ROAD</Title>
             </Typography>
             {isLogined ? (
               <MyMenu
@@ -181,16 +181,17 @@ export default function GlobalHeader({ handleLoginPop }) {
 }
 
 const MyAppBar = styled(AppBar)`
-  background: #3cb371;
+  background: #fff;
+  border-bottom: 2px solid #3cb371;
 `;
 
 const MyToolBar = styled(Toolbar)`
-  background: #3cb371;
+  background: transparent;
 `;
 
 const MyMenu = styled(IconButton)`
   margin-right: 0;
-  color: #fff;
+  color: #3cb371;
   border-radius: 100px;
 
   & .username {
@@ -202,11 +203,16 @@ const MyMenu = styled(IconButton)`
   }
 `;
 
+const Title = styled(Typography)`
+  color: #3cb371;
+  font-weight: 600;
+`;
+
 const LoginBtn = styled(Button)`
   background: transparent;
-  color: #fff;
+  color: #3cb371;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
   padding-left: 0;
   padding-right: 0;
 `;

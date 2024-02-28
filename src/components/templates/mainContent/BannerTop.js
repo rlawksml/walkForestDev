@@ -17,18 +17,15 @@ export default function BannerTop() {
   const [thum, setThum] = useState();
 
   useEffect(() => {
-    const promise = searchBook(todayKeyWordList[randomNum]);
-    const getData = () => {
-      promise.then((data) => {
-        setTodayBook(data);
+    (async () => {
+      let data = await searchBook(todayKeyWordList[randomNum]);
 
-        setTitle(data[0].title);
-        setDesc(data[0].contents);
-        setUrl(data[0].url);
-        setThum(data[0].thumbnail);
-      });
-    };
-    getData();
+      setTodayBook(data);
+      setTitle(data[0].title);
+      setDesc(data[0].contents);
+      setUrl(data[0].url);
+      setThum(data[0].thumbnail);
+    })();
   }, []);
 
   // recommandGpt("가장 최근 성인 권장도서 10개 제목만 알려줘");

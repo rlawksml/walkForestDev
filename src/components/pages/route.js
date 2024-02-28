@@ -8,6 +8,7 @@ import Faq from "./docs/Faq";
 import MyBox from "./MyBox";
 import { LoginContext } from "../../utils/providers/login/LoginContext";
 import { LoginSessionGet } from "../../utils/providers/login/LoginSession";
+import NotFound from "./NotFound";
 
 export default function Router() {
   const { isLogined, setIsLogined, userInfo, setUserInfo } =
@@ -28,6 +29,7 @@ export default function Router() {
     <>
       <Routes>
         <Route path="/" element={<Home isLogined={isLogined} />} />
+        <Route path="/*" element={<NotFound />} />
         <Route
           path="/dashboard"
           element={isLogined ? <Dashboard /> : <Home />}
