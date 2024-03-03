@@ -1,39 +1,49 @@
-import { Button, Chip } from "@mui/joy";
+import { Button, ButtonGroup, Chip, Option } from "@mui/joy";
+import Select, { selectClasses } from "@mui/joy/Select";
 import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { searchBook } from "../../../utils/book.js";
 import { recommandGpt } from "../../../utils/gpt.js";
 import { isBrowser } from "react-device-detect";
+import Loading from "../Loading.js";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
+import { KeyboardArrowDown } from "@mui/icons-material";
 
 export default function BannerTop() {
   let randomNum = Math.floor(Math.random() * 4);
-  let todayKeyWordList = ["마당을 나온 암탉", "홍길동", "철학콘서트", "AI"];
 
   const [todayBook, setTodayBook] = useState();
   const [title, setTitle] = useState();
   const [desc, setDesc] = useState();
   const [url, setUrl] = useState();
   const [thum, setThum] = useState();
+  const [gptRecommandData, setGptRecommandData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState("mid");
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    (async () => {
-      let data = await searchBook(todayKeyWordList[randomNum]);
+  // 텍스트 배열을 객체 배열로 변환하는 함수
+  const convertToObjects = async (text) => {
+    let splitText = text?.split(", ");
 
-      setTodayBook(data);
-      setTitle(data[0].title);
-      setDesc(data[0].contents);
-      setUrl(data[0].url);
-      setThum(data[0].thumbnail);
-    })();
-  }, []);
+    let objectBook = splitText.map((item) => {
+      const [category, rest] = item.split(": ");
+      const [title, author] = rest.split(" / ");
 
-  // recommandGpt("가장 최근 성인 권장도서 10개 제목만 알려줘");
+      return {
+        category: category?.replace(/'/g, "").trim(),
+        title: title?.replace(/'/g, "").trim(),
+        author: author?.replace(/'/g, ""),
+      };
+    });
+    setGptRecommandData(objectBook);
+    setIsLoading(false);
+  };
 
   const handleLength = () => {
     if (isBrowser) {
-      if (desc && desc.length >= 200) {
-        return desc.substr(0, 200) + "...";
+      if (desc && desc.length >= 80) {
+        return desc.substr(0, 80) + "...";
       } else {
         return desc;
       }
@@ -46,51 +56,117 @@ export default function BannerTop() {
     }
   };
 
+  const handleChangeSelect = (event, newValue) => {
+    setSelectedItem(newValue);
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (!isLoading) {
+        let data = await searchBook(gptRecommandData[0].title ?? "소년이 온다");
+
+        setTodayBook(data);
+        setTitle(data[0]?.title);
+        setDesc(data[0]?.contents);
+        setUrl(data[0]?.url);
+        setThum(data[0]?.thumbnail);
+      }
+    })();
+  }, [isLoading]);
+
+  useEffect(() => {
+    (async () => {
+      let keyword =
+        "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
+      let gptData = await recommandGpt(keyword);
+      await convertToObjects(gptData);
+    })();
+  }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <BannerSection>
-      <MyChip label="primary" color="primary" variant="outlined">
-        추천 도서
-      </MyChip>
-      <div bg={thum} className="BannerCt">
-        <div
-          onClick={() => {
-            window.open(url);
-          }}
-          className="imgCt"
-        >
-          <img src={thum} alt={title}></img>
-        </div>
-        <div className="contentCt">
-          <Title variant="h4">{title}</Title>
-          <Typography className="content" color={"black"} variant="h8">
-            {handleLength()}
-          </Typography>
-          <Button
-            color="primary"
+    <>
+      {isLoading ? (
+        <></>
+      ) : (
+        <BannerSection>
+          <MyChip color="warning" variant="plain">
+            <SmartToyIcon className="icon" fontSize="small" color="success" />
+            <p>GPT 추천 도서</p>
+          </MyChip>
+          {/* <Select
+            onChange={handleChangeSelect}
+            defaultValue="mid"
             variant="soft"
-            className="urlBtn"
-            onClick={() => {
-              window.open(url);
+            indicator={<KeyboardArrowDown />}
+            sx={{
+              width: 240,
+              [`& .${selectClasses.indicator}`]: {
+                transition: '0.2s',
+                [`&.${selectClasses.expanded}`]: {
+                  transform: 'rotate(-180deg)',
+                },
+              },
             }}
           >
-            책 정보
-          </Button>
-        </div>
-      </div>
-    </BannerSection>
+            <Option value="easy">쉬움</Option>
+            <Option value="mid">보통</Option>
+            <Option value="hard">어려움</Option>
+          </Select> */}
+          <div bg={thum} className="BannerCt">
+            <div
+              onClick={() => {
+                window.open(url);
+              }}
+              className="imgCt"
+            >
+              <img src={thum} alt={title}></img>
+            </div>
+            <div className="contentCt">
+              <Title variant="h4">{title}</Title>
+              <Typography className="content" color={"black"} variant="h8">
+                {handleLength()}
+              </Typography>
+              <ButtonGroup>
+                <Button
+                  color="warning"
+                  variant="soft"
+                  className="urlBtn"
+                  // onClick={() => {
+                  //   window.open(url);
+                  // }}
+                >
+                  줄거리
+                </Button>
+                <Button
+                  color="primary"
+                  variant="soft"
+                  className="urlBtn"
+                  onClick={() => {
+                    window.open(url);
+                  }}
+                >
+                  책 정보
+                </Button>
+                0{" "}
+              </ButtonGroup>
+            </div>
+          </div>
+        </BannerSection>
+      )}
+    </>
   );
 }
 
-const MyChip = styled(Chip)`
-  background: #78daa38f;
-  border: none;
-  font-size: 16px;
-  font-weight: 600;
-  color: #3ab06e;
+const MyChip = styled(Button)`
+  font-size: 18px;
+  font-weight: 400;
   padding: 10px 30px;
   margin-bottom: 10px;
   z-index: 1;
-
   margin: 0px auto 10px;
   @media (min-width: 481px) {
     margin: 0px auto 50px;
@@ -98,7 +174,7 @@ const MyChip = styled(Chip)`
 `;
 
 const Title = styled(Typography)`
-  font-size: 30px;
+  font-size: 25px;
   font-weight: 700;
   letter-spacing: 0.01em;
   margin-bottom: 10px;
@@ -119,7 +195,7 @@ const Title = styled(Typography)`
 `;
 
 const BannerSection = styled.div`
-  z-indez: 1;
+  z-index: 1;
   color: #fff;
   font-weight: bold;
   width: 100%;

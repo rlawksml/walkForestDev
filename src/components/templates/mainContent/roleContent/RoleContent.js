@@ -23,6 +23,7 @@ import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ScienceIcon from "@mui/icons-material/Science";
 import PaidIcon from "@mui/icons-material/Paid";
+import { recommandGpt } from "../../../../utils/gpt";
 
 export default function RoleContent({ handleClickOpen }) {
   const roleList = [
@@ -64,9 +65,9 @@ export default function RoleContent({ handleClickOpen }) {
   const tipTitle = null;
   const tipDesc = (
     <span>
-      어떤 책부터 독서를 시작해야할지? 정하기 어려울때!
+      GPT를 통한 분야별 추천도서입니다!
       <br />
-      추천 목록을 이용해보세요
+      추천 목록을 통해 독서를 시작해보세요
     </span>
   );
 
@@ -77,15 +78,66 @@ export default function RoleContent({ handleClickOpen }) {
   const [ItemList, setItemList] = useState();
   const [myRecord, setMyRecord] = useState();
 
+  const [todayBook, setTodayBook] = useState();
+  const [title, setTitle] = useState();
+  const [desc, setDesc] = useState();
+  const [url, setUrl] = useState();
+  const [thum, setThum] = useState();
+  const [gptRecommandData, setGptRecommandData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState("mid");
+  const [isLoading, setIsLoading] = useState(true);
+
   // 추천 아이템 클릭시 오픈 함수
   const handleUsesItemDetail = (role) => {
     setModalOpen((prev) => !prev);
     setModalInfo(role);
   };
 
+  // 텍스트 배열을 객체 배열로 변환하는 함수
+  const convertToObjects = async (text) => {
+    let splitText = text?.split(", ");
+
+    let objectBook = splitText.map((item) => {
+      const [category, rest] = item.split(": ");
+      const [title, author] = rest.split(" / ");
+
+      return {
+        category: category?.replace(/'/g, "").trim(),
+        title: title?.replace(/'/g, "").trim(),
+        author: author?.replace(/'/g, ""),
+      };
+    });
+    // setGptRecommandData(objectBook);
+    setIsLoading(false);
+  };
+
+  const handleLength = () => {
+    if (isBrowser) {
+      if (desc && desc.length >= 80) {
+        return desc.substr(0, 80) + "...";
+      } else {
+        return desc;
+      }
+    } else {
+      if (desc && desc.length >= 55) {
+        return desc.substr(0, 55) + "...";
+      } else {
+        return desc;
+      }
+    }
+  };
+
   useEffect(() => {
     setItemList(roleList);
+
+    (async () => {
+      let gptData = await recommandGpt(
+        "최근 국내 베스트셀러 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',"
+      );
+      await convertToObjects(gptData);
+    })();
   }, []);
+
   useEffect(() => {
     setMyRecord(UserRole);
   }, [isLogined]);
@@ -93,7 +145,8 @@ export default function RoleContent({ handleClickOpen }) {
   return (
     <RoleSection>
       <Title variant="">
-        <img src={emojiFire} alt="불이미지"></img> 이번주 분야별
+        {/* <CategoryIcon fontSize="large" color="primary" /> */}
+        <img src={emojiFire} alt="불이미지"></img>분야별
         <Typography sx={{ margin: "0 0 0 7px" }} variant="" color={"primary"}>
           추천도서
         </Typography>

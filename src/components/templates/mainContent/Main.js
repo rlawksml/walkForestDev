@@ -60,10 +60,10 @@ export default function Main() {
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}
         />
-        <UsesContent
+        {/* <UsesContent
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}
-        />
+        /> */}
         <MapText variant="h8">
           가까운 도서관 찾기{" "}
           <MyLocationIcon

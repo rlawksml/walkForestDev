@@ -4,7 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Loading() {
   // state로 조정해야함
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleClose = () => {
     setOpen(false);
   };
@@ -17,7 +17,7 @@ export default function Loading() {
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={open}
-        onClick={handleClose}
+        // onClick={handleClose}
       >
         <CircularProgress color="inherit" />
       </Backdrop>

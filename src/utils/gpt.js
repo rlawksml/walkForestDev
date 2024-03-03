@@ -11,13 +11,16 @@ const test = {
 };
 const openai = new OpenAI(test);
 
-// https://velog.io/@bae-sh/GPT-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-%ED%9B%84-%EB%B9%8C%EB%93%9C-Error-%ED%95%B4%EA%B2%B0-%EA%B3%BC%EC%A0%95%EA%B8%B0
-
 export const recommandGpt = async (keyword) => {
   let aws = "";
   const stream = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo-0613",
-    messages: [{ role: "user", content: keyword }],
+    model: "gpt-3.5-turbo-0125",
+    messages: [
+      {
+        role: "user",
+        content: keyword,
+      },
+    ],
     temperature: 0,
     max_tokens: 3000,
     stream: true,
@@ -27,13 +30,9 @@ export const recommandGpt = async (keyword) => {
   }
 
   console.log(aws);
+
   return aws;
 };
-
-// 사용방법
-// recommandGpt(prompt).then((response) => {
-//   console.log("ChatGPT의 응답:", response);
-// });
 
 export const summaryGpt = async (keyword) => {
   try {
