@@ -29,8 +29,6 @@ export const recommandGpt = async (keyword) => {
     aws += chunk.choices[0]?.delta?.content || "";
   }
 
-  console.log(aws);
-
   return aws;
 };
 

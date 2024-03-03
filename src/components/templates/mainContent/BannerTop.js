@@ -24,18 +24,19 @@ export default function BannerTop() {
 
   // 텍스트 배열을 객체 배열로 변환하는 함수
   const convertToObjects = async (text) => {
-    let splitText = text?.split(", ");
+    let splitText = text.split(",");
 
     let objectBook = splitText.map((item) => {
       const [category, rest] = item.split(": ");
       const [title, author] = rest.split(" / ");
 
       return {
-        category: category?.replace(/'/g, "").trim(),
+        category: category?.trim(),
         title: title?.replace(/'/g, "").trim(),
-        author: author?.replace(/'/g, ""),
+        author: author?.trim(),
       };
     });
+
     setGptRecommandData(objectBook);
     setIsLoading(false);
   };
@@ -63,7 +64,11 @@ export default function BannerTop() {
   useEffect(() => {
     (async () => {
       if (!isLoading) {
-        let data = await searchBook(gptRecommandData[0].title ?? "소년이 온다");
+        let data = await searchBook(
+          gptRecommandData[randomNum]?.title +
+            " " +
+            gptRecommandData[randomNum]?.author ?? "소년이 온다"
+        );
 
         setTodayBook(data);
         setTitle(data[0]?.title);
@@ -78,7 +83,9 @@ export default function BannerTop() {
     (async () => {
       let keyword =
         "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
-      let gptData = await recommandGpt(keyword);
+      // let gptData = await recommandGpt(keyword);
+      let gptData =
+        "사회: '나는 나로 살기로 했다 / 김수현', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
       await convertToObjects(gptData);
     })();
   }, []);
@@ -97,25 +104,7 @@ export default function BannerTop() {
             <SmartToyIcon className="icon" fontSize="small" color="success" />
             <p>GPT 추천 도서</p>
           </MyChip>
-          {/* <Select
-            onChange={handleChangeSelect}
-            defaultValue="mid"
-            variant="soft"
-            indicator={<KeyboardArrowDown />}
-            sx={{
-              width: 240,
-              [`& .${selectClasses.indicator}`]: {
-                transition: '0.2s',
-                [`&.${selectClasses.expanded}`]: {
-                  transform: 'rotate(-180deg)',
-                },
-              },
-            }}
-          >
-            <Option value="easy">쉬움</Option>
-            <Option value="mid">보통</Option>
-            <Option value="hard">어려움</Option>
-          </Select> */}
+
           <div bg={thum} className="BannerCt">
             <div
               onClick={() => {
@@ -130,29 +119,17 @@ export default function BannerTop() {
               <Typography className="content" color={"black"} variant="h8">
                 {handleLength()}
               </Typography>
-              <ButtonGroup>
-                <Button
-                  color="warning"
-                  variant="soft"
-                  className="urlBtn"
-                  // onClick={() => {
-                  //   window.open(url);
-                  // }}
-                >
-                  줄거리
-                </Button>
-                <Button
-                  color="primary"
-                  variant="soft"
-                  className="urlBtn"
-                  onClick={() => {
-                    window.open(url);
-                  }}
-                >
-                  책 정보
-                </Button>
-                0{" "}
-              </ButtonGroup>
+              <ButtonGroup></ButtonGroup>
+              <Button
+                color="primary"
+                variant="soft"
+                className="urlBtn"
+                onClick={() => {
+                  window.open(url);
+                }}
+              >
+                책 정보
+              </Button>
             </div>
           </div>
         </BannerSection>
@@ -211,21 +188,6 @@ const BannerSection = styled.div`
   position: relative;
 
   overflow: hidden;
-  // &:after {
-  //   content: "";
-  //   // z-index: -1;
-  //   background-color: #81c9a1;
-  //   width: 80%;
-  //   height: 100%;
-  //   // border-radius: 50px;
-  //   border-radius: 5px;
-  //   position: absolute;
-  //   // top: 15%;
-  //   top: -5%;
-  //   left: 50%;
-  //   transform: translateX(-50%);
-  // }
-
   & .BannerCt {
     display: flex;
     flex-direction: column;
@@ -235,7 +197,7 @@ const BannerSection = styled.div`
 
     .imgCt {
       margin: 10px;
-      width: 200px;
+      width: 150px;
       height: fit-content;
 
       position: relative;

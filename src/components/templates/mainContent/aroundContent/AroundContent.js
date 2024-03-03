@@ -16,6 +16,7 @@ import ToolTips from "../../ToolTips";
 import AroundItems from "./AroundItems";
 import { LoginContext } from "../../../../utils/providers/login/LoginContext";
 import { useSelector } from "react-redux";
+import favIcon from "../../../../assets/images/touch.png";
 
 export default function AroundContent({ handleClickOpen }) {
   const defaultData = [
@@ -54,7 +55,6 @@ export default function AroundContent({ handleClickOpen }) {
   const usesCategory = [
     { type: "all", img: "", title: "전체", icon: "" },
     { type: "copy", img: "", title: "최신순", icon: "" },
-    { type: "hash", img: "", title: "오래된순", icon: "" },
     { type: "intro", img: "", title: "선호도순", icon: "" },
   ];
 
@@ -147,7 +147,8 @@ export default function AroundContent({ handleClickOpen }) {
   return (
     <UsesSection>
       <Title variant="h6">
-        ❤️ 나의 도서 리스트{" "}
+        <img style={{ width: "25px" }} src={favIcon} alt=""></img>
+        나의 도서 리스트{" "}
         {isBrowser ? (
           <ToolTips position={"right"} title={tipTitle} desc={tipDesc}>
             <CusNoticeIcon color="" />

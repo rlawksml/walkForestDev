@@ -4,13 +4,13 @@ import styled from "styled-components";
 import NormalButton from "../../../atomic/NormalButton";
 import ToolTips from "../../ToolTips";
 import { isBrowser } from "react-device-detect";
-import roleImg01 from "../../../../assets/images/roleImg01.png";
-import roleImg02 from "../../../../assets/images/roleImg02.png";
-import roleImg03 from "../../../../assets/images/roleImg03.png";
-import roleImg04 from "../../../../assets/images/roleImg04.png";
-import roleImg05 from "../../../../assets/images/roleImgUser.png";
+import rSocial from "../../../../assets/images/social.png";
+import recommandIcon_0 from "../../../../assets/images/science.png";
+import recommandIcon_1 from "../../../../assets/images/economy.png";
+import recommandIcon_2 from "../../../../assets/images/poet.png";
+import recommandIcon_3 from "../../../../assets/images/idea.png";
 import ErrorIcon from "@mui/icons-material/Error";
-import emojiFire from "../../../../assets/images/emo_fire.png";
+import emojiCategory from "../../../../assets/images/categories.png";
 import { LoginContext } from "../../../../utils/providers/login/LoginContext";
 import RecommandBookCard from "../../modal/RecommandBookCard";
 import book1 from "../../../../assets/images/book1.jpg";
@@ -18,49 +18,44 @@ import book2 from "../../../../assets/images/book2.jpg";
 import book3 from "../../../../assets/images/book3.jpg";
 import book4 from "../../../../assets/images/book4.jpg";
 
-import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
-import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
-import ScienceIcon from "@mui/icons-material/Science";
-import PaidIcon from "@mui/icons-material/Paid";
 import { recommandGpt } from "../../../../utils/gpt";
+import { searchBook } from "../../../../utils/book";
 
 export default function RoleContent({ handleClickOpen }) {
-  const roleList = [
-    {
-      img: roleImg01,
-      name: "인문학 도서",
-      title: "마흔에 읽는 쇼펜하우어",
-      desc: "2023년 8월 유노북스에서 펴낸 《마흔에 읽는 쇼펜하우어》가 전 서점 종합 베스트셀러 1위에 올랐다. ",
-      thumnail: book1,
-      createAt: "2023년 09월 07일",
-    },
-    {
-      img: roleImg02,
-      name: "철학 도서",
-      title: "똑똑한 사람은 어떻게 생각하고 질문하는가",
-      desc: "그러니 이제 우리는 질문하는 방법을 배워야 합니다. 그리고 훈련하고, 연습하고, 발전시켜야 하죠. AI뿐 아니라 우리 스스로에게 질문하면서 자기 자신을 발전시키고, 다른 사람에게도 적절한 질문을 하면서 관계를 형성해야 합니다.",
-      thumnail: book2,
-      createAt: "2024년 01월 24일",
-    },
-    {
-      img: roleImg03,
-      name: "문학 도서",
-      title: "나는 메트로폴리탄 미술관의 경비원입니다",
-      desc: "뉴욕 메트로폴리탄 미술관의 경비원으로 10년, 인류의 위대한 걸작들을 가장 가까이서 지켜본 한 남자의 삶과 죽음, 인생과 예술에 대한 우아하고 지적인 회고",
-      thumnail: book3,
-      createAt: "2023년 11월 24일",
-    },
-    {
-      img: roleImg04,
-      name: "랜덤 추천 도서",
-      title: "퓨처 셀프",
-      desc: "살 날이 얼마 남지 않은 ‘미래의 내’가 현재로 시간 여행을 왔다고 상상해보자. ‘현재의 나’는 해야 할 일은 미뤄둔 채 소파에 누워 핸드폰을 보느라 시간 가는 줄 모른다. 당장 사고 싶은 것, 먹고 싶은 것에 생각 없이 돈을 쓰고, ‘다음 달의 나’에게 결제를 미룬다. ",
-      thumnail: book4,
-      createAt: "2023년 08월 30일",
-    },
-  ];
-  const UserRole = { img: roleImg05, name: "나의 기록" };
+  // const roleList = [
+  //   {
+  //     img: rSocial,
+  //     name: "사회 도서",
+  //     title: "나는 메트로폴리탄 미술관의 경비원입니다",
+  //     desc: "뉴욕 메트로폴리탄 미술관의 경비원으로 10년, 인류의 위대한 걸작들을 가장 가까이서 지켜본 한 남자의 삶과 죽음, 인생과 예술에 대한 우아하고 지적인 회고",
+  //     thumnail: book3,
+  //     createAt: "2023년 11월 24일",
+  //   },
+  //   {
+  //     img: rEcnomy,
+  //     name: "경제 도서",
+  //     title: "똑똑한 사람은 어떻게 생각하고 질문하는가",
+  //     desc: "그러니 이제 우리는 질문하는 방법을 배워야 합니다. 그리고 훈련하고, 연습하고, 발전시켜야 하죠. AI뿐 아니라 우리 스스로에게 질문하면서 자기 자신을 발전시키고, 다른 사람에게도 적절한 질문을 하면서 관계를 형성해야 합니다.",
+  //     thumnail: book2,
+  //     createAt: "2024년 01월 24일",
+  //   },
+  //   {
+  //     img: rNotNovel,
+  //     name: "인문학 도서",
+  //     title: "마흔에 읽는 쇼펜하우어",
+  //     desc: "2023년 8월 유노북스에서 펴낸 《마흔에 읽는 쇼펜하우어》가 전 서점 종합 베스트셀러 1위에 올랐다. ",
+  //     thumnail: book1,
+  //     createAt: "2023년 09월 07일",
+  //   },
+  //   {
+  //     img: rNovel,
+  //     name: "문학 도서",
+  //     title: "퓨처 셀프",
+  //     desc: "살 날이 얼마 남지 않은 ‘미래의 내’가 현재로 시간 여행을 왔다고 상상해보자. ‘현재의 나’는 해야 할 일은 미뤄둔 채 소파에 누워 핸드폰을 보느라 시간 가는 줄 모른다. 당장 사고 싶은 것, 먹고 싶은 것에 생각 없이 돈을 쓰고, ‘다음 달의 나’에게 결제를 미룬다. ",
+  //     thumnail: book4,
+  //     createAt: "2023년 08월 30일",
+  //   },
+  // ];
 
   const tipTitle = null;
   const tipDesc = (
@@ -71,12 +66,8 @@ export default function RoleContent({ handleClickOpen }) {
     </span>
   );
 
-  const { isLogined, setIsLogined } = useContext(LoginContext);
-
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState("");
-  const [ItemList, setItemList] = useState();
-  const [myRecord, setMyRecord] = useState();
 
   const [todayBook, setTodayBook] = useState();
   const [title, setTitle] = useState();
@@ -102,12 +93,13 @@ export default function RoleContent({ handleClickOpen }) {
       const [title, author] = rest.split(" / ");
 
       return {
-        category: category?.replace(/'/g, "").trim(),
+        category: category?.trim(),
         title: title?.replace(/'/g, "").trim(),
-        author: author?.replace(/'/g, ""),
+        author: author?.trim(),
       };
     });
-    // setGptRecommandData(objectBook);
+
+    setGptRecommandData(objectBook);
     setIsLoading(false);
   };
 
@@ -128,25 +120,41 @@ export default function RoleContent({ handleClickOpen }) {
   };
 
   useEffect(() => {
-    setItemList(roleList);
+    (async () => {
+      if (!isLoading) {
+        let social = await searchBook(
+          gptRecommandData[0]?.title + " " + gptRecommandData[0]?.author
+        );
+        let economy = await searchBook(
+          gptRecommandData[1]?.title + " " + gptRecommandData[1]?.author
+        );
+        let human = await searchBook(
+          gptRecommandData[2]?.title + " " + gptRecommandData[2]?.author
+        );
+        let novel = await searchBook(
+          gptRecommandData[3]?.title + " " + gptRecommandData[3]?.author
+        );
 
+        // console.log(social, economy, human, novel);
+        setTodayBook([social, economy, human, novel]);
+      }
+    })();
+  }, [isLoading]);
+
+  useEffect(() => {
     (async () => {
       let gptData = await recommandGpt(
-        "최근 국내 베스트셀러 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',"
+        "최근 국내 베스트셀러 사회, 경제, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 경제: ' 제목 / 저자 ',"
       );
       await convertToObjects(gptData);
     })();
   }, []);
 
-  useEffect(() => {
-    setMyRecord(UserRole);
-  }, [isLogined]);
-
   return (
     <RoleSection>
       <Title variant="">
-        {/* <CategoryIcon fontSize="large" color="primary" /> */}
-        <img src={emojiFire} alt="불이미지"></img>분야별
+        <img style={{ width: "25px" }} src={emojiCategory} alt="불이미지"></img>
+        분야별
         <Typography sx={{ margin: "0 0 0 7px" }} variant="" color={"primary"}>
           추천도서
         </Typography>
@@ -164,7 +172,7 @@ export default function RoleContent({ handleClickOpen }) {
         )}
       </Title>
       <RoleList>
-        {ItemList?.map((role, index) => {
+        {todayBook?.map((role, index) => {
           return (
             <RoleListItem
               onClick={() => {
@@ -172,28 +180,11 @@ export default function RoleContent({ handleClickOpen }) {
               }}
               key={index}
             >
-              <EmojiPeopleIcon />
-              <PsychologyAltIcon />
-              <MenuBookIcon />
-              <ScienceIcon />
-              <PaidIcon />
-              <RoelName variant="subtitle1">{role.name}</RoelName>
+              <img className="icon" src={role?.img} alt="도서 아이콘"></img>
+              <RoelName variant="subtitle1">{role?.name}</RoelName>
             </RoleListItem>
           );
         })}
-
-        {isLogined && (
-          <RoleListItem
-            onClick={() => {
-              setModalInfo(null);
-              setModalOpen((prev) => !prev);
-            }}
-            className="roleUser"
-          >
-            <RoleImg variant="circular" src={UserRole.img} />
-            <RoelName variant="subtitle1">{UserRole.name}</RoelName>
-          </RoleListItem>
-        )}
 
         {modalOpen && (
           <RecommandBookCard
@@ -235,6 +226,11 @@ const RoleListItem = styled.li`
   align-items: center;
   justify-content: center;
   margin: 0;
+
+  img.icon {
+    width: 75px;
+    margin: 10px 0;
+  }
 
   @media (min-width: 481px) {
     flex: 0 0 15%;
@@ -304,7 +300,7 @@ const RoleImg = styled(Avatar)`
 
 const RoelName = styled(Typography)`
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 17px;
 `;
 const CusNoticeIcon = styled(ErrorIcon)`
