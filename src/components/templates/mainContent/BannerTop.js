@@ -93,6 +93,19 @@ export default function BannerTop() {
     })();
   }, []);
 
+  useEffect(() => {
+    if (title === undefined || thum === undefined) {
+      (async () => {
+        let keyword =
+          "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
+        // let gptData = await recommandGpt(keyword);
+        let gptData =
+          "사회: '마당을 나온 암탉', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
+        await convertToObjects(gptData);
+      })();
+    }
+  }, [title, thum]);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -122,7 +135,7 @@ export default function BannerTop() {
                 <img src={thum} alt={title}></img>
               </div>
               <div className="contentCt">
-                <Title variant="h4">{title}</Title>
+                <Title variant="subtitle2">{title}</Title>
                 <Typography className="content" color={"black"} variant="h8">
                   {handleLength()}
                 </Typography>
@@ -183,7 +196,7 @@ const Title = styled(Typography)`
   color: #888;
 
   @media (min-width: 481px) {
-    font-size: 38px;
+    font-size: 30px;
     font-weight: 700;
     letter-spacing: -0.01em;
     color: #000;
@@ -191,6 +204,7 @@ const Title = styled(Typography)`
     text-align: left;
     word-break: keep-all;
     margin-bottom: 50px;
+    line-height: 36px;
   }
 `;
 
