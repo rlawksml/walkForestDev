@@ -96,7 +96,11 @@ export default function SearchBook({ isLoggedIn }) {
       </MyContainer>
 
       {showToast && (
-        <ToastMessage text={toastMessage} setShowToast={setShowToast} />
+        <ToastMessage
+          text={toastMessage}
+          showToast={showToast}
+          setShowToast={setShowToast}
+        />
       )}
 
       {loginPopState && (

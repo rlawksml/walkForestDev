@@ -5,10 +5,9 @@ import NormalButton from "../../../atomic/NormalButton";
 import ToolTips from "../../ToolTips";
 import { isBrowser } from "react-device-detect";
 import rSocial from "../../../../assets/images/social.png";
-import recommandIcon_0 from "../../../../assets/images/science.png";
-import recommandIcon_1 from "../../../../assets/images/economy.png";
-import recommandIcon_2 from "../../../../assets/images/poet.png";
-import recommandIcon_3 from "../../../../assets/images/idea.png";
+import rEcnomy from "../../../../assets/images/economy.png";
+import rNovel from "../../../../assets/images/poet.png";
+import rNotNovel from "../../../../assets/images/idea.png";
 import ErrorIcon from "@mui/icons-material/Error";
 import emojiCategory from "../../../../assets/images/categories.png";
 import { LoginContext } from "../../../../utils/providers/login/LoginContext";
@@ -22,40 +21,67 @@ import { recommandGpt } from "../../../../utils/gpt";
 import { searchBook } from "../../../../utils/book";
 
 export default function RoleContent({ handleClickOpen }) {
-  // const roleList = [
-  //   {
-  //     img: rSocial,
-  //     name: "사회 도서",
-  //     title: "나는 메트로폴리탄 미술관의 경비원입니다",
-  //     desc: "뉴욕 메트로폴리탄 미술관의 경비원으로 10년, 인류의 위대한 걸작들을 가장 가까이서 지켜본 한 남자의 삶과 죽음, 인생과 예술에 대한 우아하고 지적인 회고",
-  //     thumnail: book3,
-  //     createAt: "2023년 11월 24일",
-  //   },
-  //   {
-  //     img: rEcnomy,
-  //     name: "경제 도서",
-  //     title: "똑똑한 사람은 어떻게 생각하고 질문하는가",
-  //     desc: "그러니 이제 우리는 질문하는 방법을 배워야 합니다. 그리고 훈련하고, 연습하고, 발전시켜야 하죠. AI뿐 아니라 우리 스스로에게 질문하면서 자기 자신을 발전시키고, 다른 사람에게도 적절한 질문을 하면서 관계를 형성해야 합니다.",
-  //     thumnail: book2,
-  //     createAt: "2024년 01월 24일",
-  //   },
-  //   {
-  //     img: rNotNovel,
-  //     name: "인문학 도서",
-  //     title: "마흔에 읽는 쇼펜하우어",
-  //     desc: "2023년 8월 유노북스에서 펴낸 《마흔에 읽는 쇼펜하우어》가 전 서점 종합 베스트셀러 1위에 올랐다. ",
-  //     thumnail: book1,
-  //     createAt: "2023년 09월 07일",
-  //   },
-  //   {
-  //     img: rNovel,
-  //     name: "문학 도서",
-  //     title: "퓨처 셀프",
-  //     desc: "살 날이 얼마 남지 않은 ‘미래의 내’가 현재로 시간 여행을 왔다고 상상해보자. ‘현재의 나’는 해야 할 일은 미뤄둔 채 소파에 누워 핸드폰을 보느라 시간 가는 줄 모른다. 당장 사고 싶은 것, 먹고 싶은 것에 생각 없이 돈을 쓰고, ‘다음 달의 나’에게 결제를 미룬다. ",
-  //     thumnail: book4,
-  //     createAt: "2023년 08월 30일",
-  //   },
-  // ];
+  const replaceList = [
+    {
+      img: rSocial,
+      name: "사회 도서",
+      title: "나는 메트로폴리탄 미술관의 경비원입니다",
+      contents:
+        "뉴욕 메트로폴리탄 미술관의 경비원으로 10년, 인류의 위대한 걸작들을 가장 가까이서 지켜본 한 남자의 삶과 죽음, 인생과 예술에 대한 우아하고 지적인 회고",
+      thumbnail: book3,
+      createAt: "2023년 11월 24일",
+    },
+    {
+      img: rEcnomy,
+      name: "경제 도서",
+      title: "똑똑한 사람은 어떻게 생각하고 질문하는가",
+      contents:
+        "그러니 이제 우리는 질문하는 방법을 배워야 합니다. 그리고 훈련하고, 연습하고, 발전시켜야 하죠. AI뿐 아니라 우리 스스로에게 질문하면서 자기 자신을 발전시키고, 다른 사람에게도 적절한 질문을 하면서 관계를 형성해야 합니다.",
+      thumbnail: book2,
+      createAt: "2024년 01월 24일",
+    },
+    {
+      img: rNotNovel,
+      name: "인문학 도서",
+      title: "마흔에 읽는 쇼펜하우어",
+      contents:
+        "2023년 8월 유노북스에서 펴낸 《마흔에 읽는 쇼펜하우어》가 전 서점 종합 베스트셀러 1위에 올랐다. ",
+      thumbnail: book1,
+      createAt: "2023년 09월 07일",
+    },
+    {
+      img: rNovel,
+      name: "문학 도서",
+      title: "퓨처 셀프",
+      contents:
+        "살 날이 얼마 남지 않은 ‘미래의 내’가 현재로 시간 여행을 왔다고 상상해보자. ‘현재의 나’는 해야 할 일은 미뤄둔 채 소파에 누워 핸드폰을 보느라 시간 가는 줄 모른다. 당장 사고 싶은 것, 먹고 싶은 것에 생각 없이 돈을 쓰고, ‘다음 달의 나’에게 결제를 미룬다. ",
+      thumbnail: book4,
+      createAt: "2023년 08월 30일",
+    },
+  ];
+
+  const bookCategory = [
+    {
+      type: 0,
+      img: rSocial,
+      name: "사회 도서",
+    },
+    {
+      type: 1,
+      img: rEcnomy,
+      name: "경제 도서",
+    },
+    {
+      type: 2,
+      img: rNotNovel,
+      name: "인문학 도서",
+    },
+    {
+      type: 3,
+      img: rNovel,
+      name: "문학 도서",
+    },
+  ];
 
   const tipTitle = null;
   const tipDesc = (
@@ -79,9 +105,14 @@ export default function RoleContent({ handleClickOpen }) {
   const [isLoading, setIsLoading] = useState(true);
 
   // 추천 아이템 클릭시 오픈 함수
-  const handleUsesItemDetail = (role) => {
+  const handleUsesItemDetail = (index) => {
     setModalOpen((prev) => !prev);
-    setModalInfo(role);
+
+    if (!todayBook[index]) {
+      setModalInfo(replaceList[index]);
+    } else {
+      setModalInfo(todayBook[index]);
+    }
   };
 
   // 텍스트 배열을 객체 배열로 변환하는 함수
@@ -101,6 +132,7 @@ export default function RoleContent({ handleClickOpen }) {
 
     setGptRecommandData(objectBook);
     setIsLoading(false);
+    handleRecommanList();
   };
 
   const handleLength = () => {
@@ -119,24 +151,24 @@ export default function RoleContent({ handleClickOpen }) {
     }
   };
 
+  const handleRecommanList = async () => {};
+
   useEffect(() => {
     (async () => {
-      if (!isLoading) {
-        let social = await searchBook(
-          gptRecommandData[0]?.title + " " + gptRecommandData[0]?.author
-        );
-        let economy = await searchBook(
-          gptRecommandData[1]?.title + " " + gptRecommandData[1]?.author
-        );
-        let human = await searchBook(
-          gptRecommandData[2]?.title + " " + gptRecommandData[2]?.author
-        );
-        let novel = await searchBook(
-          gptRecommandData[3]?.title + " " + gptRecommandData[3]?.author
-        );
+      try {
+        let promise = gptRecommandData.map((item, index) => {
+          return searchBook(item.title + item.author);
+        });
 
-        // console.log(social, economy, human, novel);
-        setTodayBook([social, economy, human, novel]);
+        let result = await Promise.all(promise);
+
+        setTodayBook(
+          result.map((item) => {
+            return item[0];
+          })
+        );
+      } catch (error) {
+        console.log("error ", error);
       }
     })();
   }, [isLoading]);
@@ -146,6 +178,9 @@ export default function RoleContent({ handleClickOpen }) {
       let gptData = await recommandGpt(
         "최근 국내 베스트셀러 사회, 경제, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 경제: ' 제목 / 저자 ',"
       );
+      // let gptData =
+      //   "사회: '마당을 나온 암탉', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
+
       await convertToObjects(gptData);
     })();
   }, []);
@@ -172,16 +207,16 @@ export default function RoleContent({ handleClickOpen }) {
         )}
       </Title>
       <RoleList>
-        {todayBook?.map((role, index) => {
+        {bookCategory?.map((role, index) => {
           return (
             <RoleListItem
               onClick={() => {
-                handleUsesItemDetail(role);
+                handleUsesItemDetail(index);
               }}
               key={index}
             >
-              <img className="icon" src={role?.img} alt="도서 아이콘"></img>
-              <RoelName variant="subtitle1">{role?.name}</RoelName>
+              <img className="icon" src={role.img} alt="도서 아이콘"></img>
+              <RoelName variant="subtitle1">{role.name}</RoelName>
             </RoleListItem>
           );
         })}

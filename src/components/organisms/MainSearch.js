@@ -20,8 +20,6 @@ export default function MainSearch({ searchClass }) {
         navigate("/SearchBook");
       }
     }
-
-    return;
   };
 
   // input button 함수

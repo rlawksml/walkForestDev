@@ -8,12 +8,15 @@ import { recommandGpt } from "../../../utils/gpt.js";
 import { isBrowser } from "react-device-detect";
 import Loading from "../Loading.js";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
-import { KeyboardArrowDown } from "@mui/icons-material";
+
+import robot from "../../../assets/images/robot.png";
+
+import Skeleton from "@mui/material/Skeleton";
 
 export default function BannerTop() {
   let randomNum = Math.floor(Math.random() * 4);
 
-  const [todayBook, setTodayBook] = useState();
+  const [todayBook, setTodayBook] = useState(null);
   const [title, setTitle] = useState();
   const [desc, setDesc] = useState();
   const [url, setUrl] = useState();
@@ -83,9 +86,9 @@ export default function BannerTop() {
     (async () => {
       let keyword =
         "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
-      // let gptData = await recommandGpt(keyword);
-      let gptData =
-        "사회: '나는 나로 살기로 했다 / 김수현', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
+      let gptData = await recommandGpt(keyword);
+      // let gptData =
+      //   "사회: '마당을 나온 암탉', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
       await convertToObjects(gptData);
     })();
   }, []);
@@ -97,41 +100,55 @@ export default function BannerTop() {
   return (
     <>
       {isLoading ? (
-        <></>
+        <BannerSection>
+          <Skeleton variant="circular" width={280} height={280} />
+          <Skeleton variant="text" width={200} sx={{ fontSize: "1rem" }} />
+        </BannerSection>
       ) : (
         <BannerSection>
-          <MyChip color="warning" variant="plain">
-            <SmartToyIcon className="icon" fontSize="small" color="success" />
+          <MyChip color="success" variant="soft">
+            <img className="icon" src={robot} />
             <p>GPT 추천 도서</p>
           </MyChip>
 
-          <div bg={thum} className="BannerCt">
-            <div
-              onClick={() => {
-                window.open(url);
-              }}
-              className="imgCt"
-            >
-              <img src={thum} alt={title}></img>
-            </div>
-            <div className="contentCt">
-              <Title variant="h4">{title}</Title>
-              <Typography className="content" color={"black"} variant="h8">
-                {handleLength()}
-              </Typography>
-              <ButtonGroup></ButtonGroup>
-              <Button
-                color="primary"
-                variant="soft"
-                className="urlBtn"
+          {todayBook !== null && todayBook?.length > 0 ? (
+            <div bg={thum} className="BannerCt">
+              <div
                 onClick={() => {
                   window.open(url);
                 }}
+                className="imgCt"
               >
-                책 정보
-              </Button>
+                <img src={thum} alt={title}></img>
+              </div>
+              <div className="contentCt">
+                <Title variant="h4">{title}</Title>
+                <Typography className="content" color={"black"} variant="h8">
+                  {handleLength()}
+                </Typography>
+                <ButtonGroup></ButtonGroup>
+                {url && (
+                  <Button
+                    color="primary"
+                    variant="soft"
+                    className="urlBtn"
+                    onClick={() => {
+                      window.open(url);
+                    }}
+                  >
+                    책 정보
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <BannerSection>
+              <Skeleton variant="circular" width={200} height={200} />
+              <Skeleton variant="text" width={200} sx={{ fontSize: "1rem" }} />
+              <Skeleton variant="text" width={150} sx={{ fontSize: "1rem" }} />
+              <Skeleton variant="text" width={180} sx={{ fontSize: "1rem" }} />
+            </BannerSection>
+          )}
         </BannerSection>
       )}
     </>
@@ -140,11 +157,17 @@ export default function BannerTop() {
 
 const MyChip = styled(Button)`
   font-size: 18px;
-  font-weight: 400;
-  padding: 10px 30px;
+  font-weight: 600;
+  padding: 5px 30px;
   margin-bottom: 10px;
-  z-index: 1;
+  z-index: 2;
   margin: 0px auto 10px;
+
+  .icon {
+    width: 45px;
+    height: 45px;
+    margin: 5px;
+  }
   @media (min-width: 481px) {
     margin: 0px auto 50px;
   }
@@ -176,7 +199,6 @@ const BannerSection = styled.div`
   color: #fff;
   font-weight: bold;
   width: 100%;
-  // height: 350px;
   height: 100vh;
 
   padding: 60px 50px 40px;
@@ -207,7 +229,7 @@ const BannerSection = styled.div`
         content: "";
         width: 280px;
         height: 280px;
-        background: #dcdcdc59;
+        background: #e6f2ffbf;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -247,6 +269,7 @@ const BannerSection = styled.div`
 
     @media (min-width: 481px) {
       flex-direction: row;
+      min-height: 380px;
       .imgCt {
         width: 250px;
         margin-right: 150px;

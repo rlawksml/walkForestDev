@@ -25,7 +25,9 @@ export default function ToolTips({ position, title, desc, children }) {
       title={
         <React.Fragment>
           <Typography color="inherit">{title ? title : ""}</Typography>
-          <Typography className="desc">{desc}</Typography>
+          <Typography sx={{ wordBreak: "keep-all" }} className="desc">
+            {desc}
+          </Typography>
         </React.Fragment>
       }
     >

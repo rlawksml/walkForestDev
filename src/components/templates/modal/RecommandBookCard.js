@@ -25,10 +25,10 @@ export default function RecommandBookCard({
   const [createAt, setCreatAt] = useState();
 
   useEffect(() => {
-    setThum(modalInfo?.thumnail);
-    setDesc(modalInfo?.desc);
+    setThum(modalInfo?.thumbnail);
+    setDesc(modalInfo?.contents);
     setTitle(modalInfo?.title);
-    setCreatAt(modalInfo?.createAt);
+    setCreatAt(modalInfo?.datetime?.substr(0, 10) ?? modalInfo.createAt);
   }, []);
   return (
     <>
@@ -53,7 +53,7 @@ export default function RecommandBookCard({
                   </Typography>
                   <Typography level="body-sm">{createAt}</Typography>
                 </div>
-                <IconButton
+                {/* <IconButton
                   className="bookMarkBtn"
                   aria-label="bookmark Bahamas Islands"
                   variant="plain"
@@ -62,7 +62,7 @@ export default function RecommandBookCard({
                   sx={{ marginLeft: "auto" }}
                 >
                   <BookmarkAdd />
-                </IconButton>
+                </IconButton> */}
               </BookHeader>
 
               <BookImg
@@ -85,6 +85,9 @@ export default function RecommandBookCard({
                   color="primary"
                   aria-label="Explore Bahamas Islands"
                   sx={{ ml: "auto", alignSelf: "center", fontWeight: 500 }}
+                  onClick={() => {
+                    window.open(modalInfo.url);
+                  }}
                 >
                   보러가기
                 </Button>
@@ -109,8 +112,8 @@ const MyModal = styled(Modal)`
 `;
 
 const BookImg = styled.img`
-  width: 70%;
-  max-width: 400px;
+  width: 50%;
+  max-width: 300px;
   margin: 0 auto;
 `;
 

@@ -37,7 +37,7 @@ export default function DashBoard() {
 
   const handleLength = (item) => {
     if (item.contents.length >= 150) {
-      return item.contents.substring(0, 150) + "...";
+      return item.contents.substring(0, 50) + "...";
     } else {
       return item.contents;
     }
@@ -96,6 +96,7 @@ export default function DashBoard() {
               xs={isBrowser ? 3.5 : 8}
             >
               <img
+                className="bookImg"
                 src={item.thumbnail}
                 variant="rounded"
                 onClick={() => {
@@ -157,6 +158,9 @@ const MyGridItem = styled(Grid)`
   img {
     margin: 10px auto;
     width: 120px;
+    min-height: 280px;
+    border: 1px solid #dcdcdc;
+    background-color: #dcdcdc;
     &:hover {
       cursor: pointer;
     }

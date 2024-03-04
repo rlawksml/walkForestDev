@@ -11,7 +11,7 @@ import Link from "@mui/material/Link";
 import Tab from "@mui/material/Tab";
 import TextField from "@mui/material/TextField";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import icon_close from "../../../assets/images/icon_close.svg";
 
@@ -38,6 +38,7 @@ export default function Login({
   const [value, setValue] = useState("1");
   const [id, setIdState] = useState("");
   const [pw, setPwState] = useState("");
+  const [requiredMessage, setRequiredMessage] = useState(null);
 
   // submit함수
   const handleSubmit = (event) => {
@@ -45,10 +46,11 @@ export default function Login({
     const data = new FormData(event.currentTarget);
 
     let userData = LoginLocalGet();
+    let checkList = userData?.map((item) => item.id === id);
 
-    if (userData?.map((item) => (item.id === id ? true : false))) {
+    if (checkList?.find((item) => item === true)) {
       let loginuser = userData.filter((item) => item.id === id);
-      if (loginuser[0].pw === pw) {
+      if (loginuser.length > 0 && loginuser[0].pw === pw) {
         setUserInfo({
           userUUID: loginuser[0].uuid,
           userNickName: loginuser[0].nickname,
@@ -65,15 +67,12 @@ export default function Login({
         );
         setLoginPopState((prev) => !prev);
         return true;
+      } else {
+        setRequiredMessage("아이디 또는 비밀번호가 다릅니다.");
       }
     } else {
-      setToastMessage("아이디 또는 비밀번호가 다릅니다.");
-      setOpenMeesage(true);
+      setRequiredMessage("가입되지 않은 아이디입니다.");
     }
-    // console.log({
-    //   email: data.get("email"),
-    //   password: data.get("password"),
-    // });
   };
 
   const handleChange = (event, newValue) => {
@@ -150,10 +149,11 @@ export default function Login({
                           setPwState(e.target.value);
                         }}
                       />
-                      <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="아이디 저장"
-                      />
+                      {requiredMessage !== null && (
+                        <WarnMessage variant="h7">
+                          {requiredMessage}{" "}
+                        </WarnMessage>
+                      )}
                       <Button
                         type="submit"
                         fullWidth
@@ -168,9 +168,15 @@ export default function Login({
 
                       <Grid container>
                         <Grid item xs>
-                          <Link href="#" variant="body2">
-                            {"아직 회원이 아니신가요? 회원가입"}
-                          </Link>
+                          <Button
+                            onClick={(e) => {
+                              handleChange(e, "2");
+                            }}
+                            variant="text"
+                            color="info"
+                          >
+                            아직 회원이 아니신가요? 회원가입
+                          </Button>
                         </Grid>
                         <Grid item></Grid>
                       </Grid>
@@ -183,6 +189,7 @@ export default function Login({
                       setLoginPopState={setLoginPopState}
                       setToastMessage={setToastMessage}
                       setOpenMeesage={setOpenMeesage}
+                      handleChange={handleChange}
                     />
                   </TabPanel>
                 </TabContext>
@@ -204,20 +211,6 @@ const LoginCt = styled.div`
   height: 100%;
   width: 100%;
   z-index: 1;
-
-  // @media (min-width: 481px) {
-  //   top: 80px;
-  //   right: 20%;
-  //   height: 50%;
-  //   width: 30%;
-  //   border: 1px solid #dcdcdc;
-  //   border-radius: 10px;
-  //   box-shadow: var(--joy-shadowRing, 0 0 #000),
-  //     0px 1px 2px 0px
-  //       rgba(
-  //         var(--joy-shadowChannel, 21 21 21) / var(--joy-shadowOpacity, 0.08)
-  //       );
-  // }
 `;
 
 const LoginOtherAcc = styled.div`
@@ -400,5 +393,24 @@ const SignupOtherBtn = styled.button`
 const CusTabList = styled(TabList)`
   & .MuiTabs-flexContainer {
     justify-content: center;
+  }
+`;
+const WarnMessage = styled(Typography)`
+  width: 100%;
+  display: block;
+  border-radius: 5px;
+  background-color: crimson;
+  color: #fff;
+  font-weight: 600;
+  position: relative;
+  padding: 10px;
+  &::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background-color: darkred;
   }
 `;

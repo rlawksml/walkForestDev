@@ -2,60 +2,57 @@ import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import uuid from "react-uuid";
 import styled from "styled-components";
 import {
   LoginLocalGet,
   LoginlocalSet,
 } from "../../../utils/providers/login/LoginSession";
-import uuid from "react-uuid";
-import { LoginContext } from "../../../utils/providers/login/LoginContext";
 
 export default function SignUp({
   setToastMessage,
   setOpenMeesage,
   setLoginPopState,
+  handleChange,
 }) {
   const [nickName, setNickname] = useState("");
   const [id, setIdState] = useState("");
   const [pw, setPwState] = useState("");
   const [pw2, setPw2State] = useState("");
-  const [duplicateId, setDuplicateState] = useState(true);
+  const [duplicateId, setDuplicateState] = useState(false);
   const [userUUID, setUserUUID] = useState([]);
+
+  const [requiredMessage, setRequiredMessage] = useState(null);
 
   let checkKor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; //한글
 
   const validCheck = (e) => {
     let userData = LoginLocalGet("user");
     if (id.length < 1 || id.length > 11) {
-      setToastMessage("ID는 1~10자 사이로 입력해주세요");
-      setOpenMeesage(true);
-      setIdState("");
+      // setToastMessage("ID는 1~10자 사이로 입력해주세요");
+      setRequiredMessage("ID는 1~10자 사이로 입력해주세요");
+
       return false;
     } else if (checkKor.test(id)) {
-      setToastMessage("ID에 한글은 사용이 불가합니다.");
-      setOpenMeesage(true);
-      setIdState("");
+      // setToastMessage("ID에 한글은 사용이 불가합니다.");
+      setRequiredMessage("ID에 한글은 사용이 불가합니다.");
+
       return false;
     } else if (nickName.length < 1 || nickName.length > 11) {
-      setToastMessage("닉네임은 1~10자 사이로 입력해주세요.");
-      setOpenMeesage(true);
-      setNickname("");
+      // setToastMessage("닉네임은 1~10자 사이로 입력해주세요.");
+      setRequiredMessage("닉네임은 1~10자 사이로 입력해주세요.");
+
       return false;
     } else if (pw.length < 1 || pw.length > 11) {
-      setToastMessage("비밀번호는 1~10자 사이로 입력해주세요.");
-      setOpenMeesage(true);
-      setPwState("");
+      // setToastMessage("비밀번호는 1~10자 사이로 입력해주세요.");
+      setRequiredMessage("비밀번호는 1~10자 사이로 입력해주세요.");
+
       return false;
     } else if (pw !== pw2) {
-      setToastMessage("비밀번호가 서로 다릅니다.");
-      setOpenMeesage(true);
-      setPw2State("");
-      return false;
-    } else if (!duplicateId) {
-      setToastMessage("중복된 아이디는 사용이 불가합니다.");
-      setOpenMeesage(true);
-      setIdState("");
+      // setToastMessage("비밀번호가 서로 다릅니다.");
+      setRequiredMessage("비밀번호가 서로 다릅니다.");
+
       return false;
     }
 
@@ -71,38 +68,48 @@ export default function SignUp({
     setPw2State(data.get("password2"));
     setNickname(data.get("nickName"));
 
-    if (validCheck()) {
+    if (!duplicateId) {
+      setRequiredMessage("아이디 중복 검사를 해주세요.");
+      setOpenMeesage(true);
+    }
+    if (validCheck() && duplicateId) {
       handleSignUp(uuid());
+      setDuplicateState(false);
     }
   };
 
   const dupyCheck = () => {
     const userData = LoginLocalGet("user");
-    console.log(userData.map((item) => item.id, id));
 
-    if (userData?.map((item) => (item.id === id ? true : false))) {
-      setToastMessage("중복된 아이디입니다.");
-      setOpenMeesage(true);
-      setIdState("");
-      setDuplicateState(false);
-      return false;
-    } else {
-      if (id.length > 0 || id.length < 11) {
-        setToastMessage("사용 가능한 아이디입니다.");
-        setDuplicateState(true);
-        setOpenMeesage(true);
-        return true;
+    if (id.trim("") !== "") {
+      let checkList = userData?.map((item) => item.id === id);
+
+      if (checkList?.find((item) => item === true)) {
+        setRequiredMessage("중복된 아이디입니다.");
+        setDuplicateState(false);
+      } else {
+        if (id.length > 0 && id.length < 11) {
+          setRequiredMessage("사용 가능한 아이디입니다.");
+          setDuplicateState(true);
+        }
       }
-      return false;
+    } else {
+      setRequiredMessage("ID는 1~10자 사이로 입력해주세요.");
     }
   };
 
   const handleSignUp = (uuid) => {
+    handleChange(null, "2");
+    setLoginPopState((prev) => !prev);
     LoginlocalSet(id, pw, nickName, uuid);
     setUserUUID(uuid);
     setToastMessage("회원가입이 완료되어습니다!");
     setOpenMeesage(true);
   };
+
+  useEffect(() => {
+    setRequiredMessage(null);
+  }, [id, nickName]);
 
   return (
     <SignUpCt id="tab_sign">
@@ -176,6 +183,11 @@ export default function SignUp({
             setPw2State(e.target.value);
           }}
         />
+
+        {requiredMessage !== null && (
+          <WarnMessage variant="h7">{requiredMessage} </WarnMessage>
+        )}
+
         <Button
           type="submit"
           fullWidth
@@ -198,5 +210,25 @@ const SignUpCt = styled.div`
 const LoginInput = styled(TextField)`
   input {
     height: 52px;
+  }
+`;
+
+const WarnMessage = styled(Typography)`
+  width: 100%;
+  display: block;
+  border-radius: 5px;
+  background-color: crimson;
+  color: #fff;
+  font-weight: 600;
+  position: relative;
+  padding: 10px;
+  &::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background-color: darkred;
   }
 `;

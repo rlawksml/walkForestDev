@@ -60,6 +60,8 @@ export default function YoutubeList({}) {
 const MyImageListItem = styled(ImageListItem)`
   border: 1px solid #dcdcdc;
   border-radius: 5px;
+
+  cursor: pointer;
 `;
 
 const YoutubeTitle = styled(ImageListItemBar)`

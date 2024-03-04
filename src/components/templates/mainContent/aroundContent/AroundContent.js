@@ -1,68 +1,29 @@
-import CheckIcon from "@mui/icons-material/Check";
 import ErrorIcon from "@mui/icons-material/Error";
 import Chip from "@mui/joy/Chip";
 import { Grid, Typography } from "@mui/material";
+import { Button } from "@mui/joy";
 import React, { useContext, useEffect, useState } from "react";
 import { isBrowser } from "react-device-detect";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import emoLens from "../../../../assets/images/emo_lens.png";
-import roleImg01 from "../../../../assets/images/roleImg01.png";
-import roleImg02 from "../../../../assets/images/roleImg02.png";
-import roleImg03 from "../../../../assets/images/roleImg03.png";
+import favIcon from "../../../../assets/images/touch.png";
+import { LoginContext } from "../../../../utils/providers/login/LoginContext";
 import NormalButton from "../../../atomic/NormalButton";
 import ModalPopProgram from "../../ModalPopProgram";
 import ToastMessage from "../../ToastMessage";
 import ToolTips from "../../ToolTips";
-import AroundItems from "./AroundItems";
-import { LoginContext } from "../../../../utils/providers/login/LoginContext";
-import { useSelector } from "react-redux";
-import favIcon from "../../../../assets/images/touch.png";
 
 export default function AroundContent({ handleClickOpen }) {
-  const defaultData = [
-    {
-      type: "hash",
-      typeText: "유료 프로그램",
-      typeColor: "p",
-      desc: "바리스타와 함께하는 숲속의 커피 타임, 숲속에서의 휴식을 즐겨보세요",
-      thumNail: roleImg01,
-      userName: "낭만 커피",
-      numOfCart: 444,
-      numOfLike: 123,
-    },
-    {
-      type: "copy",
-      typeText: "동행 프로그램",
-      typeColor: "y",
-      desc: "매주 시간을 정해놓고 가까운 숲을 지정해서 같이 탐방해요!",
-      thumNail: roleImg02,
-      userName: "함께 러닝",
-      numOfCart: 666,
-      numOfLike: 100,
-    },
-    {
-      type: "intro",
-      typeText: "1인 프로그램",
-      typeColor: "g",
-      desc: "숲 해설가와 함께 하는 트레킹! 🎋",
-      thumNail: roleImg03,
-      userName: "숲속해설가",
-      numOfCart: 6007,
-      numOfLike: 301,
-    },
-  ];
+  const navigate = useNavigate();
 
-  const usesCategory = [
-    { type: "all", img: "", title: "전체", icon: "" },
-    { type: "copy", img: "", title: "최신순", icon: "" },
-    { type: "intro", img: "", title: "선호도순", icon: "" },
-  ];
+  const usesCategory = [{ type: "all", img: "", title: "더보기", icon: "" }];
 
   const tipTitle = null;
   // const tipDesc = `나의 도서 리스트는 내가 찜한 도서 목록을 보여줍니다.<br/> <로그인 이후 사용 가능합니다>`
   const tipDesc = (
     <span>
-      나의 도서 리스트는 내가 찜한 도서 목록을 보여줍니다.
+      나의 도서 리스트는 내가 찜한 도서 목록을 최대 8개까지 보여줍니다.
       <br />
       로그인 이후 사용 가능합니다
     </span>
@@ -81,31 +42,15 @@ export default function AroundContent({ handleClickOpen }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState("");
 
-  const handleToastMessage = (type) => {
-    if (type === "like") {
-      setToastState("💗 좋아요를 누르셨습니다!");
-      setShowToast((prev) => !prev);
-    } else if (type === "copy") {
-      setToastState("🎁 담아가기를 누르셨습니다!");
-      setShowToast((prev) => !prev);
-    }
-    return;
-  };
+  let sliceSize;
 
   // 카테고리 버튼
   const handleCategoryBtn = (index, type) => {
-    setCategoryState(index);
-    sortAroundItem(index, type);
-  };
-
-  // 카테고리 버튼 클릭시 정렬 함수
-  const sortAroundItem = (index) => {
-    if (index === 0) {
-      setAroundData(defaultData);
+    if (!isLogined) {
+      setToastState("💗 로그인 이후 사용하실 수 있습니다.!");
+      setShowToast((prev) => !prev);
     } else {
-      setAroundData(
-        defaultData.filter((item) => item.type === categoryList[index].type)
-      );
+      navigate("/dashboard");
     }
   };
 
@@ -124,11 +69,6 @@ export default function AroundContent({ handleClickOpen }) {
   };
 
   useEffect(() => {
-    setAroundData([]);
-  }, [categoryState]);
-
-  useEffect(() => {
-    setAroundData(defaultData);
     setCategoryList(usesCategory);
 
     // 다른 부분 클릭시 아이템 active 해제
@@ -137,6 +77,7 @@ export default function AroundContent({ handleClickOpen }) {
         setAroundItemState(null);
       }
     };
+    sliceSize = isBrowser ? 8 : 4;
 
     document.addEventListener("click", handleClickOutside);
     return () => {
@@ -172,8 +113,7 @@ export default function AroundContent({ handleClickOpen }) {
               color="neutral"
               size="lg"
               className={isActive ? "active" : ""}
-              // endDecorator={isActive && <CheckIcon fontSize="md" />}
-              onClick={() => handleCategoryBtn(index, item.type)}
+              onClick={() => handleCategoryBtn()}
             >
               {item.title}
             </CategoryItem>
@@ -183,38 +123,32 @@ export default function AroundContent({ handleClickOpen }) {
 
       {isLogined ? (
         <CusGrid container>
-          {favoriteList?.map((item, index) => {
-            return (
-              <>
-                <Typography>{item.title}</Typography>;
-                <Typography>{item.thumbnail}</Typography>;
-                <Typography>{item.authors}</Typography>;
-              </>
-            );
-          })}
-          {/* {aroundData?.map((item, index) => {
-            const isActive = aroundItemState === index;
-            return (
-              <AroundItems
-                item
-                key={index}
-                typeColor={item.typeColor}
-                itemtype={item.typeText}
-                desc={item.desc}
-                thumNail={item.thumNail}
-                userName={item.userName}
-                Ncart={item.numOfCart}
-                Nlike={item.numOfLike}
-                handleToastMessage={handleToastMessage}
-                setShowToast={setShowToast}
-                aroundCalss={isActive}
+          {favoriteList.length > 0 ? (
+            favoriteList?.slice(0, sliceSize)?.map((item, index) => {
+              return (
+                <FavItemCt>
+                  <img className="img" src={item.thumbnail} />
+                  <div className="descCt">
+                    <Typography className="title">{item.title}</Typography>
+                    <Typography className="auth">{item.authors[0]}</Typography>
+                  </div>
+                </FavItemCt>
+              );
+            })
+          ) : (
+            <Empty>
+              <p>도서 검색을 통해 나의 도서 리스트를 추가해보세요</p>
+              <Button
                 onClick={() => {
-                  handleAroundItem(index, item);
+                  navigate("/SearchBook");
                 }}
-                handleAroundItemDetail={handleAroundItemDetail}
-              />
-            );
-          })} */}
+                variant="soft"
+                color="primary"
+              >
+                바로가기
+              </Button>
+            </Empty>
+          )}
         </CusGrid>
       ) : (
         <Empty>로그인 후 사용해보세요</Empty>
@@ -243,6 +177,7 @@ const CusGrid = styled(Grid)`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   @media (min-width: 481px) {
     flex-direction: row;
     justify-content: start;
@@ -291,13 +226,64 @@ const CusNoticeIcon = styled(ErrorIcon)`
 
 const Empty = styled.div`
   width: 100%;
-  height: 60px;
-  padding: 30px;
+  min-height: 60px;
+  padding: 20px;
   background-color: #dcdcdc;
   border-left: 5px solid tomato;
   color: #434;
   font-size: 14px;
-  font-weight: 500;
+  line-height: auto;
+  font-weight: 400;
+
   display: flex;
   align-items: center;
+  flex-direction: column;
+
+  p {
+    margin: 10px 0;
+    font-weight: 600;
+    letter-spacing: -1px;
+    word-break: keep-all;
+  }
+`;
+
+const FavItemCt = styled.div`
+  box-shadow: 0px 2px 3px 1px rgba(0, 0, 0, 0.25);
+  background-color: #fff;
+  padding: 10px 15px;
+
+  width: 250px;
+  height: 150px;
+  margin: 5px 10px;
+  display: flex;
+
+  .descCt {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+  }
+
+  .auth {
+    font-size: 11px;
+    font-weight: 300;
+
+    letter-spacing: -1px;
+    line-height: auto;
+
+    font-weight: 600;
+    margin-top: auto;
+    text-align: right;
+  }
+  .title {
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: -1px;
+    line-height: auto;
+  }
+  .img {
+    width: 100px;
+    margin-right: 10px;
+    border: 1px solid #dcdcdc;
+    background-color: #dcdcdc;
+  }
 `;

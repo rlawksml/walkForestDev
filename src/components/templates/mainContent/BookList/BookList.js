@@ -55,12 +55,12 @@ export default function BookList({ setShowToast, setToastMessage }) {
     // 중복되지 않는 경우에만 새로운 아이템 추가
     if (!isExist) {
       setFavoriteList((prevList) => [...prevList, newItem]);
-      setShowToast((prev) => !prev);
       setToastMessage("📌 나의 도서 목록에 추가되었습니다");
+      setShowToast((prev) => !prev);
       BookListSessionSet(favoriteListReducer);
     } else {
-      setShowToast((prev) => !prev);
       setToastMessage("❌ 이미 추가된 아이템입니다");
+      setShowToast((prev) => !prev);
     }
   };
 
