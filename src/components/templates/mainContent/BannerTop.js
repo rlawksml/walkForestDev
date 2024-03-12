@@ -7,26 +7,19 @@ import { searchBook } from "../../../utils/book.js";
 import { recommandGpt } from "../../../utils/gpt.js";
 import { isBrowser } from "react-device-detect";
 import Loading from "../Loading.js";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
-
 import robot from "../../../assets/images/robot.png";
-
 import Skeleton from "@mui/material/Skeleton";
 
 export default function BannerTop() {
-  let randomNum = Math.floor(Math.random() * 4);
+  let randomNum = Math.floor(Math.random() * 3);
 
   const [todayBook, setTodayBook] = useState(null);
-  const [title, setTitle] = useState();
-  const [desc, setDesc] = useState();
-  const [url, setUrl] = useState();
-  const [thum, setThum] = useState();
   const [gptRecommandData, setGptRecommandData] = useState([]);
-  const [selectedItem, setSelectedItem] = useState("mid");
   const [isLoading, setIsLoading] = useState(true);
 
   // 텍스트 배열을 객체 배열로 변환하는 함수
-  const convertToObjects = async (text) => {
+  const convertToObjects = (text) => {
+    console.log("2");
     let splitText = text.split(",");
 
     let objectBook = splitText.map((item) => {
@@ -46,66 +39,68 @@ export default function BannerTop() {
 
   const handleLength = () => {
     if (isBrowser) {
-      if (desc && desc.length >= 80) {
-        return desc.substr(0, 80) + "...";
+      if (todayBook.content && todayBook.content.length >= 80) {
+        return todayBook.content.substr(0, 80) + "...";
       } else {
-        return desc;
+        return todayBook.content;
       }
     } else {
-      if (desc && desc.length >= 55) {
-        return desc.substr(0, 55) + "...";
+      if (todayBook.content && todayBook.content.length >= 55) {
+        return todayBook.content.substr(0, 55) + "...";
       } else {
-        return desc;
+        return todayBook.content;
       }
     }
   };
 
-  const handleChangeSelect = (event, newValue) => {
-    setSelectedItem(newValue);
-  };
-
   useEffect(() => {
+    console.log("3");
     (async () => {
-      if (!isLoading) {
-        let data = await searchBook(
-          gptRecommandData[randomNum]?.title +
-            " " +
-            gptRecommandData[randomNum]?.author ?? "소년이 온다"
-        );
-
-        setTodayBook(data);
-        setTitle(data[0]?.title);
-        setDesc(data[0]?.contents);
-        setUrl(data[0]?.url);
-        setThum(data[0]?.thumbnail);
+      try {
+        if (!isLoading) {
+          let data = await searchBook(
+            gptRecommandData[randomNum]?.title +
+              " " +
+              gptRecommandData[randomNum]?.author ?? "소년이 온다"
+          );
+          if (data !== undefined) {
+            setTodayBook(data[0]);
+            console.log("연결 성공", data);
+          } else {
+            console.log("other Error", data);
+          }
+        }
+      } catch (error) {
+        console.log("error", error);
       }
     })();
   }, [isLoading]);
 
   useEffect(() => {
+    console.log("4");
+    if (
+      todayBook === undefined ||
+      todayBook === null ||
+      todayBook.length <= 0
+    ) {
+      (async () => {
+        let data = await searchBook("소년이 온다");
+        setTodayBook(data[0]);
+      })();
+    }
+  }, [todayBook]);
+
+  useEffect(() => {
+    console.log("1");
     (async () => {
       let keyword =
         "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
       let gptData = await recommandGpt(keyword);
-      // let gptData =
-      //   "사회: '마당을 나온 암탉', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
-      await convertToObjects(gptData);
+      convertToObjects(gptData);
     })();
   }, []);
 
-  useEffect(() => {
-    if (title === undefined || thum === undefined) {
-      (async () => {
-        let keyword =
-          "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
-        // let gptData = await recommandGpt(keyword);
-        let gptData =
-          "사회: '마당을 나온 암탉', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
-        await convertToObjects(gptData);
-      })();
-    }
-  }, [title, thum]);
-
+  console.log("0");
   if (isLoading) {
     return <Loading />;
   }
@@ -125,28 +120,28 @@ export default function BannerTop() {
           </MyChip>
 
           {todayBook !== null && todayBook?.length > 0 ? (
-            <div bg={thum} className="BannerCt">
+            <div className="BannerCt">
               <div
                 onClick={() => {
-                  window.open(url);
+                  window.open(todayBook.url);
                 }}
                 className="imgCt"
               >
-                <img src={thum} alt={title}></img>
+                <img src={todayBook.url} alt={todayBook.title}></img>
               </div>
               <div className="contentCt">
-                <Title variant="subtitle2">{title}</Title>
+                <Title variant="subtitle2">{todayBook.title}</Title>
                 <Typography className="content" color={"black"} variant="h8">
                   {handleLength()}
                 </Typography>
                 <ButtonGroup></ButtonGroup>
-                {url && (
+                {todayBook.url && (
                   <Button
                     color="primary"
                     variant="soft"
                     className="urlBtn"
                     onClick={() => {
-                      window.open(url);
+                      window.open(todayBook.url);
                     }}
                   >
                     책 정보
