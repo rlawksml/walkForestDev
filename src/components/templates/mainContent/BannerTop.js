@@ -10,8 +10,15 @@ import Loading from "../Loading.js";
 import robot from "../../../assets/images/robot.png";
 import Skeleton from "@mui/material/Skeleton";
 
-export default function BannerTop() {
+export default function BannerTop({
+  setOpenDia,
+  setDiaMessageTitle,
+  setDiaMessageDesc,
+}) {
   let randomNum = Math.floor(Math.random() * 3);
+
+  setDiaMessageTitle("데이터 오류");
+  setDiaMessageDesc("페이지를 새로고침 할까요?");
 
   const [todayBook, setTodayBook] = useState(null);
   const [gptRecommandData, setGptRecommandData] = useState([]);
@@ -19,7 +26,7 @@ export default function BannerTop() {
 
   // 텍스트 배열을 객체 배열로 변환하는 함수
   const convertToObjects = (text) => {
-    console.log("2");
+    console.log("convertToObjects", text);
     let splitText = text.split(",");
 
     let objectBook = splitText.map((item) => {
@@ -35,64 +42,49 @@ export default function BannerTop() {
 
     setGptRecommandData(objectBook);
     setIsLoading(false);
+    handleSearchBook(objectBook);
   };
 
   const handleLength = () => {
     if (isBrowser) {
-      if (todayBook.content && todayBook.content.length >= 80) {
-        return todayBook.content.substr(0, 80) + "...";
+      if (todayBook?.contents && todayBook?.contents.length >= 80) {
+        return todayBook?.contents.substr(0, 80) + "...";
       } else {
-        return todayBook.content;
+        return todayBook?.contents;
       }
     } else {
-      if (todayBook.content && todayBook.content.length >= 55) {
-        return todayBook.content.substr(0, 55) + "...";
+      if (todayBook?.contents && todayBook?.contents.length >= 55) {
+        return todayBook?.contents.substr(0, 55) + "...";
       } else {
-        return todayBook.content;
+        return todayBook?.contents;
       }
     }
   };
 
-  useEffect(() => {
-    console.log("3");
+  const handleSearchBook = (objectBook) => {
     (async () => {
+      console.log("searchBook");
+      console.log("searchBook gptRecommandData", objectBook);
       try {
-        if (!isLoading) {
-          let data = await searchBook(
-            gptRecommandData[randomNum]?.title +
-              " " +
-              gptRecommandData[randomNum]?.author ?? "소년이 온다"
-          );
-          if (data !== undefined) {
-            setTodayBook(data[0]);
-            console.log("연결 성공", data);
-          } else {
-            console.log("other Error", data);
-          }
+        let data = await searchBook(
+          objectBook[randomNum]?.title + " " + objectBook[randomNum]?.author
+        );
+        if (data !== undefined && data.length > 0) {
+          setTodayBook(data[0]);
+          console.log("연결 성공", data);
+        } else {
+          console.log("other Error", data);
         }
       } catch (error) {
         console.log("error", error);
+        alert("새로고침");
       }
     })();
-  }, [isLoading]);
+  };
 
   useEffect(() => {
-    console.log("4");
-    if (
-      todayBook === undefined ||
-      todayBook === null ||
-      todayBook.length <= 0
-    ) {
-      (async () => {
-        let data = await searchBook("소년이 온다");
-        setTodayBook(data[0]);
-      })();
-    }
-  }, [todayBook]);
-
-  useEffect(() => {
-    console.log("1");
     (async () => {
+      console.log("recommandGpt");
       let keyword =
         "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
       let gptData = await recommandGpt(keyword);
@@ -100,7 +92,6 @@ export default function BannerTop() {
     })();
   }, []);
 
-  console.log("0");
   if (isLoading) {
     return <Loading />;
   }
@@ -109,8 +100,10 @@ export default function BannerTop() {
     <>
       {isLoading ? (
         <BannerSection>
-          <Skeleton variant="circular" width={280} height={280} />
+          <Skeleton variant="circular" width={200} height={200} />
           <Skeleton variant="text" width={200} sx={{ fontSize: "1rem" }} />
+          <Skeleton variant="text" width={150} sx={{ fontSize: "1rem" }} />
+          <Skeleton variant="text" width={180} sx={{ fontSize: "1rem" }} />
         </BannerSection>
       ) : (
         <BannerSection>
@@ -118,45 +111,35 @@ export default function BannerTop() {
             <img className="icon" src={robot} />
             <p>GPT 추천 도서</p>
           </MyChip>
-
-          {todayBook !== null && todayBook?.length > 0 ? (
-            <div className="BannerCt">
-              <div
-                onClick={() => {
-                  window.open(todayBook.url);
-                }}
-                className="imgCt"
-              >
-                <img src={todayBook.url} alt={todayBook.title}></img>
-              </div>
-              <div className="contentCt">
-                <Title variant="subtitle2">{todayBook.title}</Title>
-                <Typography className="content" color={"black"} variant="h8">
-                  {handleLength()}
-                </Typography>
-                <ButtonGroup></ButtonGroup>
-                {todayBook.url && (
-                  <Button
-                    color="primary"
-                    variant="soft"
-                    className="urlBtn"
-                    onClick={() => {
-                      window.open(todayBook.url);
-                    }}
-                  >
-                    책 정보
-                  </Button>
-                )}
-              </div>
+          <div className="BannerCt">
+            <div
+              onClick={() => {
+                window.open(todayBook?.url);
+              }}
+              className="imgCt"
+            >
+              <img src={todayBook?.thumbnail} alt={todayBook?.title}></img>
             </div>
-          ) : (
-            <BannerSection>
-              <Skeleton variant="circular" width={200} height={200} />
-              <Skeleton variant="text" width={200} sx={{ fontSize: "1rem" }} />
-              <Skeleton variant="text" width={150} sx={{ fontSize: "1rem" }} />
-              <Skeleton variant="text" width={180} sx={{ fontSize: "1rem" }} />
-            </BannerSection>
-          )}
+            <div className="contentCt">
+              <Title variant="subtitle2">{todayBook?.title}</Title>
+              <Typography className="content" color={"black"} variant="h8">
+                {handleLength()}
+              </Typography>
+              <ButtonGroup></ButtonGroup>
+              {todayBook?.url && (
+                <Button
+                  color="primary"
+                  variant="soft"
+                  className="urlBtn"
+                  onClick={() => {
+                    window.open(todayBook?.url);
+                  }}
+                >
+                  책 정보
+                </Button>
+              )}
+            </div>
+          </div>
         </BannerSection>
       )}
     </>

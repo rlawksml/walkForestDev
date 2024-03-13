@@ -61,10 +61,19 @@ export default function Main() {
     setDiaMessageDesc(desc);
   };
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   return (
     <>
       <MyContainer maxWidth={"lg"}>
-        <BannerTop />
+        <BannerTop
+          setOpenDia={setOpenDia}
+          handleDialogText={handleDialogText}
+          setDiaMessageTitle={setDiaMessageTitle}
+          setDiaMessageDesc={setDiaMessageDesc}
+        />
         <MainSearch />
         <RoleContent
           handleDialogText={handleDialogText}
@@ -115,6 +124,7 @@ export default function Main() {
           desc={diaMessageDesc}
           openDia={openDia}
           setOpenDia={setOpenDia}
+          callBackFunc={handleRefresh}
         />
       )}
 
