@@ -13,9 +13,12 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { addFavorite } from "../../../../actions";
 import { isBrowser } from "react-device-detect";
 import { BookListSessionSet } from "../../../../utils/FavBookList";
+import { LoginContext } from "../../../../utils/providers/login/LoginContext";
 
 export default function BookList({ setShowToast, setToastMessage }) {
   const itemData = [];
+
+  let { isLogined } = useContext(LoginContext);
 
   const [bookList, setBookList] = useState();
   const { inputValue, setInputValue } = useContext(SearchContext);
@@ -72,7 +75,7 @@ export default function BookList({ setShowToast, setToastMessage }) {
           {bookList.map((item, index) => (
             <MyImageListItem
               onClick={() => {
-                handleFavList(item);
+                isLogined ? handleFavList(item) : window.open(item.url);
               }}
               key={index}
             >
@@ -93,7 +96,7 @@ export default function BookList({ setShowToast, setToastMessage }) {
               ></ImageListItemBar>
               <Button
                 onClick={() => {
-                  handleAddFavorite(item);
+                  isLogined ? handleAddFavorite(item) : window.open(item.url);
                 }}
                 className="cartBtn"
               >

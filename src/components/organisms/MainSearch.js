@@ -5,6 +5,7 @@ import { Button } from "@mui/joy";
 import Input from "@mui/joy/Input";
 import { SearchContext } from "../../utils/providers/search/SearchContext";
 import { useLocation, useNavigate } from "react-router";
+import { loadingButtonClasses } from "@mui/lab";
 
 export default function MainSearch({ searchClass }) {
   const { inputValue, setInputValue } = useContext(SearchContext);
@@ -31,7 +32,9 @@ export default function MainSearch({ searchClass }) {
   };
 
   useEffect(() => {
-    setInputValue("");
+    if (location.pathname !== "/SearchBook") {
+      setInputValue("");
+    }
   }, []);
 
   return (

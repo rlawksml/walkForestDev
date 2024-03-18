@@ -70,7 +70,6 @@ export default function Main() {
       <MyContainer maxWidth={"lg"}>
         <BannerTop
           setOpenDia={setOpenDia}
-          handleDialogText={handleDialogText}
           setDiaMessageTitle={setDiaMessageTitle}
           setDiaMessageDesc={setDiaMessageDesc}
         />

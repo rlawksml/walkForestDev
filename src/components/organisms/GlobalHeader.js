@@ -41,8 +41,6 @@ export default function GlobalHeader({ handleLoginPop }) {
 
   const { userId, useruuid, nickname } = LoginSessionGetInfo();
 
-  useEffect(() => {}, []);
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <MyAppBar position="static">

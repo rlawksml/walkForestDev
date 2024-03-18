@@ -15,18 +15,18 @@ export default function BannerTop({
   setDiaMessageTitle,
   setDiaMessageDesc,
 }) {
+  // 랜덤 변수 만들기
   let randomNum = Math.floor(Math.random() * 3);
-
-  setDiaMessageTitle("데이터 오류");
-  setDiaMessageDesc("페이지를 새로고침 할까요?");
 
   const [todayBook, setTodayBook] = useState(null);
   const [gptRecommandData, setGptRecommandData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  setDiaMessageTitle("데이터 오류");
+  setDiaMessageDesc("페이지를 새로고침 할까요?");
+
   // 텍스트 배열을 객체 배열로 변환하는 함수
   const convertToObjects = (text) => {
-    console.log("convertToObjects", text);
     let splitText = text.split(",");
 
     let objectBook = splitText.map((item) => {
@@ -41,7 +41,6 @@ export default function BannerTop({
     });
 
     setGptRecommandData(objectBook);
-    setIsLoading(false);
     handleSearchBook(objectBook);
   };
 
@@ -63,8 +62,6 @@ export default function BannerTop({
 
   const handleSearchBook = (objectBook) => {
     (async () => {
-      console.log("searchBook");
-      console.log("searchBook gptRecommandData", objectBook);
       try {
         let data = await searchBook(
           objectBook[randomNum]?.title + " " + objectBook[randomNum]?.author
@@ -75,16 +72,12 @@ export default function BannerTop({
         } else {
           console.log("other Error", data);
         }
-      } catch (error) {
-        console.log("error", error);
-        alert("새로고침");
-      }
+      } catch (error) {}
     })();
   };
 
   useEffect(() => {
     (async () => {
-      console.log("recommandGpt");
       let keyword =
         "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
       let gptData = await recommandGpt(keyword);
@@ -92,56 +85,51 @@ export default function BannerTop({
     })();
   }, []);
 
+  useEffect(() => {
+    todayBook !== null && setIsLoading(false);
+  }, [todayBook]);
+
   if (isLoading) {
     return <Loading />;
   }
 
   return (
     <>
-      {isLoading ? (
-        <BannerSection>
-          <Skeleton variant="circular" width={200} height={200} />
-          <Skeleton variant="text" width={200} sx={{ fontSize: "1rem" }} />
-          <Skeleton variant="text" width={150} sx={{ fontSize: "1rem" }} />
-          <Skeleton variant="text" width={180} sx={{ fontSize: "1rem" }} />
-        </BannerSection>
-      ) : (
-        <BannerSection>
-          <MyChip color="success" variant="soft">
-            <img className="icon" src={robot} />
-            <p>GPT 추천 도서</p>
-          </MyChip>
-          <div className="BannerCt">
-            <div
-              onClick={() => {
-                window.open(todayBook?.url);
-              }}
-              className="imgCt"
-            >
-              <img src={todayBook?.thumbnail} alt={todayBook?.title}></img>
-            </div>
-            <div className="contentCt">
-              <Title variant="subtitle2">{todayBook?.title}</Title>
-              <Typography className="content" color={"black"} variant="h8">
-                {handleLength()}
-              </Typography>
-              <ButtonGroup></ButtonGroup>
-              {todayBook?.url && (
-                <Button
-                  color="primary"
-                  variant="soft"
-                  className="urlBtn"
-                  onClick={() => {
-                    window.open(todayBook?.url);
-                  }}
-                >
-                  책 정보
-                </Button>
-              )}
-            </div>
+      <BannerSection>
+        <MyChip color="success" variant="soft">
+          <img className="icon" src={robot} />
+          <p>GPT 추천 도서</p>
+        </MyChip>
+        <div className="BannerCt">
+          <div
+            onClick={() => {
+              window.open(todayBook?.url);
+            }}
+            className="imgCt"
+          >
+            <img src={todayBook?.thumbnail} alt={todayBook?.title}></img>
           </div>
-        </BannerSection>
-      )}
+          <div className="contentCt">
+            <Title variant="subtitle2">{todayBook?.title}</Title>
+            <Typography className="content" color={"black"} variant="h8">
+              {handleLength()}
+            </Typography>
+            <ButtonGroup></ButtonGroup>
+            {todayBook?.url && (
+              <Button
+                color="primary"
+                variant="soft"
+                className="urlBtn"
+                onClick={() => {
+                  window.open(todayBook?.url);
+                }}
+              >
+                책 정보
+              </Button>
+            )}
+          </div>
+        </div>
+      </BannerSection>
     </>
   );
 }
