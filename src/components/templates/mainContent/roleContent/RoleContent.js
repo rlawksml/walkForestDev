@@ -17,7 +17,7 @@ import book2 from "../../../../assets/images/book2.jpg";
 import book3 from "../../../../assets/images/book3.jpg";
 import book4 from "../../../../assets/images/book4.jpg";
 
-import { recommandGpt } from "../../../../utils/gpt";
+// import { recommandGpt } from "../../../../utils/gpt";
 import { searchBook } from "../../../../utils/book";
 
 export default function RoleContent({ handleClickOpen }) {
@@ -108,11 +108,12 @@ export default function RoleContent({ handleClickOpen }) {
   const handleUsesItemDetail = (index) => {
     setModalOpen((prev) => !prev);
 
-    if (!todayBook[index]) {
-      setModalInfo(replaceList[index]);
-    } else {
-      setModalInfo(todayBook[index]);
-    }
+    setModalInfo(replaceList[index]);
+    // if (!todayBook[index]) {
+    //   setModalInfo(replaceList[index]);
+    // } else {
+    //   setModalInfo(todayBook[index]);
+    // }
   };
 
   // 텍스트 배열을 객체 배열로 변환하는 함수
@@ -173,17 +174,17 @@ export default function RoleContent({ handleClickOpen }) {
     })();
   }, [isLoading]);
 
-  useEffect(() => {
-    (async () => {
-      let gptData = await recommandGpt(
-        "최근 국내 베스트셀러 사회, 경제, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 경제: ' 제목 / 저자 ',"
-      );
-      // let gptData =
-      //   "사회: '마당을 나온 암탉', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
+  // useEffect(() => {
+  //   (async () => {
+  //     let gptData = await recommandGpt(
+  //       "최근 국내 베스트셀러 사회, 경제, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 경제: ' 제목 / 저자 ',"
+  //     );
+  //     // let gptData =
+  //     //   "사회: '마당을 나온 암탉', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
 
-      await convertToObjects(gptData);
-    })();
-  }, []);
+  //     await convertToObjects(gptData);
+  //   })();
+  // }, []);
 
   return (
     <RoleSection>

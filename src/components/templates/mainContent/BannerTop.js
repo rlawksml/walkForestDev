@@ -4,19 +4,23 @@ import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { searchBook } from "../../../utils/book.js";
-import { recommandGpt } from "../../../utils/gpt.js";
+// import { recommandGpt } from "../../../utils/gpt.js";
 import { isBrowser } from "react-device-detect";
 import Loading from "../Loading.js";
 import robot from "../../../assets/images/robot.png";
-import Skeleton from "@mui/material/Skeleton";
+import book0 from "../../../assets/images/banner0.jpg";
+import book1 from "../../../assets/images/banner1.jpg";
+import book2 from "../../../assets/images/banner2.jpg";
+import BookGeneration from "../../../utils/BookGeneration.js";
 
 export default function BannerTop({
   setOpenDia,
   setDiaMessageTitle,
   setDiaMessageDesc,
 }) {
+  const { BannerBookList } = BookGeneration;
   // 랜덤 변수 만들기
-  let randomNum = Math.floor(Math.random() * 3);
+  let randomNum;
 
   const [todayBook, setTodayBook] = useState(null);
   const [gptRecommandData, setGptRecommandData] = useState([]);
@@ -76,13 +80,18 @@ export default function BannerTop({
     })();
   };
 
+  // useEffect(() => {
+  //   (async () => {
+  //     let keyword =
+  //       "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
+  //     let gptData = await recommandGpt(keyword);
+  //     convertToObjects(gptData);
+  //   })();
+  // }, []);
+
   useEffect(() => {
-    (async () => {
-      let keyword =
-        "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
-      let gptData = await recommandGpt(keyword);
-      convertToObjects(gptData);
-    })();
+    randomNum = Math.floor(Math.random() * 3);
+    setTodayBook(BannerBookList[randomNum]);
   }, []);
 
   useEffect(() => {
@@ -98,7 +107,7 @@ export default function BannerTop({
       <BannerSection>
         <MyChip color="success" variant="soft">
           <img className="icon" src={robot} />
-          <p>GPT 추천 도서</p>
+          <p>추천 도서</p>
         </MyChip>
         <div className="BannerCt">
           <div
@@ -107,7 +116,17 @@ export default function BannerTop({
             }}
             className="imgCt"
           >
-            <img src={todayBook?.thumbnail} alt={todayBook?.title}></img>
+            {/* <img src={todayBook.thumbnail} alt={todayBook?.title}></img> */}
+            <img
+              src={
+                todayBook.type === 0
+                  ? book0
+                  : todayBook.type === 1
+                  ? book1
+                  : book2
+              }
+              alt={todayBook?.title}
+            ></img>
           </div>
           <div className="contentCt">
             <Title variant="subtitle2">{todayBook?.title}</Title>
