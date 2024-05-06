@@ -8,22 +8,28 @@ import {
 } from "./utils/providers/login/LoginContext";
 import { SearchProvider } from "./utils/providers/search/SearchContext";
 import { useContext, useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { useState } from "react";
 
 function App() {
+  const queryClient = new QueryClient();
+
   return (
     <>
       {/* styleEngineProvider > mui 사용 컴포넌트 */}
       <StyledEngineProvider injectFirst>
-        <SearchProvider>
-          <LoginProvider>
-            <ModalProvider>
-              <BrowserRouter basename={process.env.PUBLIC_URL}>
-                {/* <BrowserRouter> */}
-                <Router />
-              </BrowserRouter>
-            </ModalProvider>
-          </LoginProvider>
-        </SearchProvider>
+        <QueryClientProvider client={queryClient}>
+          <SearchProvider>
+            <LoginProvider>
+              <ModalProvider>
+                <BrowserRouter basename={process.env.PUBLIC_URL}>
+                  {/* <BrowserRouter> */}
+                  <Router />
+                </BrowserRouter>
+              </ModalProvider>
+            </LoginProvider>
+          </SearchProvider>
+        </QueryClientProvider>
       </StyledEngineProvider>
     </>
   );

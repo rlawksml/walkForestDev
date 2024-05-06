@@ -73,7 +73,7 @@ export default function GlobalHeader({ handleLoginPop }) {
                   navigate("/");
                 }}
               >
-                <Title variant="h6">📖 오늘은 뭐 읽지?</Title>
+                <Title variant="h6">Library Today</Title>
               </Typography>
               {isLogined ? (
                 <MyMenu
@@ -94,17 +94,18 @@ export default function GlobalHeader({ handleLoginPop }) {
                   </Typography>
                 </MyMenu>
               ) : (
-                <LoginBtn
-                  color="white"
-                  disabled={false}
-                  onClick={(e) => {
-                    handleLoginPop(e);
-                  }}
-                  size="sm"
-                  variant="soft"
-                >
-                  로그인
-                </LoginBtn>
+                <></>
+                // <LoginBtn
+                //   color="white"
+                //   disabled={false}
+                //   onClick={(e) => {
+                //     handleLoginPop(e);
+                //   }}
+                //   size="sm"
+                //   variant="soft"
+                // >
+                //   로그인
+                // </LoginBtn>
               )}
             </MyToolBar>
           </Container>
@@ -150,17 +151,18 @@ export default function GlobalHeader({ handleLoginPop }) {
                 {nickname}님
               </MyMenu>
             ) : (
-              <LoginBtn
-                color="white"
-                disabled={false}
-                onClick={(e) => {
-                  handleLoginPop(e);
-                }}
-                size="sm"
-                variant="soft"
-              >
-                로그인
-              </LoginBtn>
+              <></>
+              // <LoginBtn
+              //   color="white"
+              //   disabled={false}
+              //   onClick={(e) => {
+              //     handleLoginPop(e);
+              //   }}
+              //   size="sm"
+              //   variant="soft"
+              // >
+              //   로그인
+              // </LoginBtn>
             )}
           </MyToolBar>
         )}
@@ -180,7 +182,7 @@ export default function GlobalHeader({ handleLoginPop }) {
 
 const MyAppBar = styled(AppBar)`
   background: #fff;
-  border-bottom: 1px solid #3cb371;
+  /* border-bottom: 1px solid #3cb371; */
 `;
 
 const MyToolBar = styled(Toolbar)`

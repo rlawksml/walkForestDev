@@ -19,6 +19,7 @@ import book4 from "../../../../assets/images/book4.jpg";
 
 // import { recommandGpt } from "../../../../utils/gpt";
 import { searchBook } from "../../../../utils/book";
+import { selectBooks } from "../../../../utils/AladinBook";
 
 export default function RoleContent({ handleClickOpen }) {
   const replaceList = [
@@ -104,55 +105,41 @@ export default function RoleContent({ handleClickOpen }) {
   const [selectedItem, setSelectedItem] = useState("mid");
   const [isLoading, setIsLoading] = useState(true);
 
+
+  // 0505 newdata
+  const [newData , setNewData] =useState(null)
+
+
+  const parseXML = (xmlStr) => {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlStr, "application/xml");
+    return xml;
+  };
+
   // 추천 아이템 클릭시 오픈 함수
   const handleUsesItemDetail = (index) => {
     setModalOpen((prev) => !prev);
-
     setModalInfo(replaceList[index]);
-    // if (!todayBook[index]) {
-    //   setModalInfo(replaceList[index]);
-    // } else {
-    //   setModalInfo(todayBook[index]);
-    // }
   };
 
-  // 텍스트 배열을 객체 배열로 변환하는 함수
-  const convertToObjects = async (text) => {
-    let splitText = text?.split(", ");
 
-    let objectBook = splitText.map((item) => {
-      const [category, rest] = item.split(": ");
-      const [title, author] = rest.split(" / ");
+  useEffect(()=>{
+    (async()=>{
+      let data = await selectBooks("경제 도서" , "")
+      const xmlDocument = parseXML(data)
+      const itemsArray = Array.from(xmlDocument.querySelectorAll('item')).map(item => ({
+        title: item.querySelector('title').textContent,
+        link: item.querySelector('link').textContent,
+        author: item.querySelector('author').textContent,
+        description: item.querySelector('description').textContent,
+        cover: item.querySelector('cover').textContent,
+        priceSales: item.querySelector('priceSales').textContent
+      }));
 
-      return {
-        category: category?.trim(),
-        title: title?.replace(/'/g, "").trim(),
-        author: author?.trim(),
-      };
-    });
-
-    setGptRecommandData(objectBook);
-    setIsLoading(false);
-    handleRecommanList();
-  };
-
-  const handleLength = () => {
-    if (isBrowser) {
-      if (desc && desc.length >= 80) {
-        return desc.substr(0, 80) + "...";
-      } else {
-        return desc;
-      }
-    } else {
-      if (desc && desc.length >= 55) {
-        return desc.substr(0, 55) + "...";
-      } else {
-        return desc;
-      }
-    }
-  };
-
-  const handleRecommanList = async () => {};
+      console.log(itemsArray)
+      setNewData(itemsArray)
+    })()
+  },[])
 
   useEffect(() => {
     (async () => {
@@ -174,17 +161,6 @@ export default function RoleContent({ handleClickOpen }) {
     })();
   }, [isLoading]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     let gptData = await recommandGpt(
-  //       "최근 국내 베스트셀러 사회, 경제, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 경제: ' 제목 / 저자 ',"
-  //     );
-  //     // let gptData =
-  //     //   "사회: '마당을 나온 암탉', 경제: '금융공부 / 하하', 과학: '쉽게 배우는 물리학 / 박성열', 인문: '행복한 철학 / 루이스 미터스', 문학: '나의 작은 아쿠아리움 / 김풍'";
-
-  //     await convertToObjects(gptData);
-  //   })();
-  // }, []);
 
   return (
     <RoleSection>

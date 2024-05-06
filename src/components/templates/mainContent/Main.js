@@ -2,28 +2,27 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/joy";
 import Input from "@mui/joy/Input";
 import { Container, Typography } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ModalContext } from "../../../utils/providers/modal/ModalContext";
 import Faq from "../../pages/docs/Faq";
 import PersonalPolicy from "../../pages/docs/PersonalPolicy";
 import ServicePolicy from "../../pages/docs/ServicePolicy";
 import Dialogs from "../Dialogs";
 import BannerTop from "./BannerTop";
-import BookList from "./BookList/BookList";
-import AroundContent from "./aroundContent/AroundContent";
 import RoleContent from "./roleContent/RoleContent";
-import UsesContent from "./useContent/UsesContent";
 import styled from "styled-components";
 import MainSearch from "../../organisms/MainSearch";
 import KakaoMap from "../map/KakaoMap";
 import MapSection from "./mapContent/MapSection";
-import LibararyData from "../../../utils/LibararyData";
 import NormalButton from "../../atomic/NormalButton";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { isBrowser } from "react-device-detect";
 import ToolTips from "../ToolTips";
 import ErrorIcon from "@mui/icons-material/Error";
 import mapIcon from "../../../assets/images/library.png";
+// import AladinBook from "../../../utils/AladinBook";
+import { useQuery } from "react-query";
+import axios from "axios";
 
 export default function Main() {
   // 다이아로그 관련 state
@@ -65,6 +64,55 @@ export default function Main() {
     window.location.reload();
   };
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // const fetchBooks = async () => {
+    //   try {
+    //     const response = await axios.get('/api/bookList', {
+    //       params: {
+    //         ttbkey: APIKEY,
+    //         QueryType : "ItemNewSpecial",
+    //       }
+    //     });
+    //     console.log(response.data)
+    //     if(response.data.status === 200){
+    //       setBooks(response.data.item)
+    //       // return response.data;
+    //     }else{
+    //       console.log("다른 에러 발생")
+    //     }
+    //   } catch (error) {
+    //     console.error('Error searching books:', error);
+    //     return null;
+    //   }
+    // };
+
+
+    // console.log("findBooks")
+    // findBooks()
+    // console.log("fetchBooks")
+    // fetchBooks();
+    
+    // const testBooks = async () => {
+    //   try{
+    //     const response = await axios.get("/api/bookSearch", {
+    //       params:{
+    //         ttbkey:APIKEY, itemIdType:"ISBN", itemId:"1230"
+    //       }
+    //     })
+    //     console.log(response)
+    //     return response.data;
+    //   } catch (error) {
+    //     console.error('Error searching books:', error);
+    //     return null;
+    //   }
+    // }
+    // console.log("testBooks")
+    // testBooks()
+  }, []);
+
   return (
     <>
       <MyContainer maxWidth={"lg"}>
@@ -73,16 +121,17 @@ export default function Main() {
           setDiaMessageTitle={setDiaMessageTitle}
           setDiaMessageDesc={setDiaMessageDesc}
         />
+        {/* <AladinBook /> */}
         <MainSearch />
         <RoleContent
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}
         />
         {/* 로그인 되면 옮길 곳 */}
-        <AroundContent
+        {/* <AroundContent
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}
-        />
+        /> */}
         {/* <UsesContent
           handleDialogText={handleDialogText}
           handleClickOpen={handleDialog}

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import libraryData from "../../../utils/librarySeoul/seoulCurrentLibrary.json";
-import axios from "axios";
 import styled from "styled-components";
-import { Typography } from "@mui/material";
 import "../../templates/map/map.css";
 
 export function catchPosition(item) {

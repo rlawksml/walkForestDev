@@ -30,6 +30,7 @@ export default function Router() {
       <Routes>
         <Route path="/" element={<Home isLogined={isLogined} />} />
         <Route path="/*" element={<NotFound />} />
+
         <Route
           path="/dashboard"
           element={isLogined ? <Dashboard /> : <Home />}

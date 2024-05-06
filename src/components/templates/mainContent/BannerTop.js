@@ -12,145 +12,102 @@ import book0 from "../../../assets/images/banner0.jpg";
 import book1 from "../../../assets/images/banner1.jpg";
 import book2 from "../../../assets/images/banner2.jpg";
 import BookGeneration from "../../../utils/BookGeneration.js";
+import { ListUpBooks } from "../../../utils/AladinBook.js";
 
 export default function BannerTop({
   setOpenDia,
   setDiaMessageTitle,
   setDiaMessageDesc,
 }) {
-  const { BannerBookList } = BookGeneration;
+  // const { BannerBookList } = BookGeneration;
   // 랜덤 변수 만들기
-  let randomNum;
+  let randomNum = Math.floor(Math.random() * 5);;
 
   const [todayBook, setTodayBook] = useState(null);
-  const [gptRecommandData, setGptRecommandData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  setDiaMessageTitle("데이터 오류");
-  setDiaMessageDesc("페이지를 새로고침 할까요?");
-
-  // 텍스트 배열을 객체 배열로 변환하는 함수
-  const convertToObjects = (text) => {
-    let splitText = text.split(",");
-
-    let objectBook = splitText.map((item) => {
-      const [category, rest] = item.split(": ");
-      const [title, author] = rest.split(" / ");
-
-      return {
-        category: category?.trim(),
-        title: title?.replace(/'/g, "").trim(),
-        author: author?.trim(),
-      };
-    });
-
-    setGptRecommandData(objectBook);
-    handleSearchBook(objectBook);
-  };
 
   const handleLength = () => {
     if (isBrowser) {
-      if (todayBook?.contents && todayBook?.contents.length >= 80) {
-        return todayBook?.contents.substr(0, 80) + "...";
+      if (todayBook?.description && todayBook?.description.length >= 80) {
+        return todayBook?.description.substr(0, 80) + "...";
       } else {
-        return todayBook?.contents;
+        return todayBook?.description;
       }
     } else {
-      if (todayBook?.contents && todayBook?.contents.length >= 55) {
-        return todayBook?.contents.substr(0, 55) + "...";
+      if (todayBook?.description && todayBook?.description.length >= 55) {
+        return todayBook?.description.substr(0, 55) + "...";
       } else {
-        return todayBook?.contents;
+        return todayBook?.description;
       }
     }
   };
-
-  const handleSearchBook = (objectBook) => {
-    (async () => {
-      try {
-        let data = await searchBook(
-          objectBook[randomNum]?.title + " " + objectBook[randomNum]?.author
-        );
-        if (data !== undefined && data.length > 0) {
-          setTodayBook(data[0]);
-          console.log("연결 성공", data);
-        } else {
-          console.log("other Error", data);
-        }
-      } catch (error) {}
-    })();
-  };
-
-  // useEffect(() => {
-  //   (async () => {
-  //     let keyword =
-  //       "최근 국내 베스트셀러 중 그림으로 되어서 읽기 쉬운 사회, 경제, 과학, 인문, 문학 1권씩 제목을 알려줘 그리고 형식은 예시와 같이 작성해줘 예시 === 사회 : ' 제목 / 저자 ', 과학: ' 제목 / 저자 ',";
-  //     let gptData = await recommandGpt(keyword);
-  //     convertToObjects(gptData);
-  //   })();
-  // }, []);
-
-  useEffect(() => {
-    randomNum = Math.floor(Math.random() * 3);
-    setTodayBook(BannerBookList[randomNum]);
-  }, []);
 
   useEffect(() => {
     todayBook !== null && setIsLoading(false);
   }, [todayBook]);
 
+  useEffect(() => {
+    (async()=>{
+      try{
+        const data = await ListUpBooks()
+        console.log(data.item)
+        setTodayBook(data.item[randomNum]);
+      }catch(error){
+        console.error("Error 에러")
+      }
+    })()
+  }, []);
+
+  // useEffect(() => {
+  //   setDiaMessageTitle("데이터 오류");
+  //   setDiaMessageDesc("페이지를 새로고침 할까요?");
+  // }, []);
+
   if (isLoading) {
     return <Loading />;
+  }else {
+    return (
+      <>
+        <BannerSection>
+          <div className="BannerCt">
+            <div
+              onClick={() => {
+                window.open(todayBook.link);
+              }}
+              className="imgCt"
+            >
+              <img
+                src={
+                  todayBook.cover
+                }
+                alt={todayBook.title}
+              ></img>
+            </div>
+            <div className="contentCt">
+              <Title variant="subtitle2">{todayBook.title}</Title>
+              <Typography className="content" color={"black"} variant="h8">
+                {handleLength()}
+              </Typography>
+              <ButtonGroup></ButtonGroup>
+              {todayBook.link && (
+                <Button
+                  color="primary"
+                  variant="soft"
+                  className="urlBtn"
+                  onClick={() => {
+                    window.open(todayBook.link);
+                  }}
+                >
+                  책 정보
+                </Button>
+              )}
+            </div>
+          </div>
+        </BannerSection>
+      </>
+    );
   }
-
-  return (
-    <>
-      <BannerSection>
-        <MyChip color="success" variant="soft">
-          <img className="icon" src={robot} />
-          <p>추천 도서</p>
-        </MyChip>
-        <div className="BannerCt">
-          <div
-            onClick={() => {
-              window.open(todayBook?.url);
-            }}
-            className="imgCt"
-          >
-            {/* <img src={todayBook.thumbnail} alt={todayBook?.title}></img> */}
-            <img
-              src={
-                todayBook.type === 0
-                  ? book0
-                  : todayBook.type === 1
-                  ? book1
-                  : book2
-              }
-              alt={todayBook?.title}
-            ></img>
-          </div>
-          <div className="contentCt">
-            <Title variant="subtitle2">{todayBook?.title}</Title>
-            <Typography className="content" color={"black"} variant="h8">
-              {handleLength()}
-            </Typography>
-            <ButtonGroup></ButtonGroup>
-            {todayBook?.url && (
-              <Button
-                color="primary"
-                variant="soft"
-                className="urlBtn"
-                onClick={() => {
-                  window.open(todayBook?.url);
-                }}
-              >
-                책 정보
-              </Button>
-            )}
-          </div>
-        </div>
-      </BannerSection>
-    </>
-  );
+  
 }
 
 const MyChip = styled(Button)`
