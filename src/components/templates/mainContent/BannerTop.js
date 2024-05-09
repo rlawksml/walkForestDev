@@ -27,19 +27,25 @@ export default function BannerTop({
   const [isLoading, setIsLoading] = useState(true);
 
   const handleLength = () => {
-    if (isBrowser) {
-      if (todayBook?.description && todayBook?.description.length >= 80) {
-        return todayBook?.description.substr(0, 80) + "...";
+    console.log(todayBook)
+    if(todayBook.description !== ""){
+      if (isBrowser) {
+        if (todayBook.description && todayBook.description.length >= 80) {
+          return todayBook.description.substr(0, 80) + "...";
+        } else {
+          return todayBook.description;
+        }
       } else {
-        return todayBook?.description;
+        if (todayBook.description && todayBook.description.length >= 55) {
+          return todayBook.description.substr(0, 55) + "...";
+        } else {
+          return todayBook.description;
+        }
       }
-    } else {
-      if (todayBook?.description && todayBook?.description.length >= 55) {
-        return todayBook?.description.substr(0, 55) + "...";
-      } else {
-        return todayBook?.description;
-      }
+    }else{
+      return todayBook.author +" "+ todayBook.pubDate
     }
+    
   };
 
   useEffect(() => {
