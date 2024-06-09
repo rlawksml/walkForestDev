@@ -24,6 +24,8 @@ import mapIcon from "../../../assets/images/library.png";
 import { useQuery } from "react-query";
 import axios from "axios";
 
+import Typewriter from 'typewriter-effect';
+
 export default function Main() {
   // 다이아로그 관련 state
   const [openDia, setOpenDia] = useState(false);

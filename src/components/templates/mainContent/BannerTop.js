@@ -13,6 +13,9 @@ import book1 from "../../../assets/images/banner1.jpg";
 import book2 from "../../../assets/images/banner2.jpg";
 import BookGeneration from "../../../utils/BookGeneration.js";
 import { ListUpBooks } from "../../../utils/AladinBook.js";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { motion } from "framer-motion";
+import Typewriter from 'typewriter-effect';
 
 export default function BannerTop({
   setOpenDia,
@@ -26,8 +29,11 @@ export default function BannerTop({
   const [todayBook, setTodayBook] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isApiConnected, setIsApiConnecgted] = useState(false)
+
+  const [isTypingDone, setIsTypingDone] = useState(false);
+
   const handleLength = () => {
-    console.log(todayBook)
     if(todayBook.description !== ""){
       if (isBrowser) {
         if (todayBook.description && todayBook.description.length >= 80) {
@@ -56,10 +62,14 @@ export default function BannerTop({
     (async()=>{
       try{
         const data = await ListUpBooks()
-        console.log(data.item)
         setTodayBook(data.item[randomNum]);
+        setIsApiConnecgted(true)
       }catch(error){
         console.error("Error 에러")
+        setIsApiConnecgted(false)
+        randomNum = Math.floor(Math.random() * 3);
+        let { BannerBookList } = BookGeneration 
+        setTodayBook(BannerBookList[randomNum]);
       }
     })()
   }, []);
@@ -69,11 +79,20 @@ export default function BannerTop({
   //   setDiaMessageDesc("페이지를 새로고침 할까요?");
   // }, []);
 
+
+
   if (isLoading) {
     return <Loading />;
   }else {
     return (
-      <>
+      <div>
+        <motion.div
+          animate={{y:3, x:3 , opacity: 1}}
+          transition={{duration:0.25}}
+          style={{
+            opacity: 0,
+          }}
+        >
         <BannerSection>
           <div className="BannerCt">
             <div
@@ -84,33 +103,70 @@ export default function BannerTop({
             >
               <img
                 src={
-                  todayBook.cover
+                  isApiConnected ? 
+                  todayBook.cover :
+                  book1
                 }
                 alt={todayBook.title}
               ></img>
             </div>
             <div className="contentCt">
-              <Title variant="subtitle2">{todayBook.title}</Title>
-              <Typography className="content" color={"black"} variant="h8">
-                {handleLength()}
-              </Typography>
-              <ButtonGroup></ButtonGroup>
+              <Title className="title" variant="subtitle2">
+                <Typewriter
+                  options={{
+                    autoStart: true,
+                    loop: false,
+                    delay: 50,
+                    // cursor: !isTypingDone ? '|' : '',
+                    cursor: ""
+                  }}
+                  deleteAll
+                  onInit={(typewriter) => {
+                    typewriter
+                      .typeString(todayBook.title)
+                      .callFunction(() => {
+                        console.log('Title is typed out!');
+                        setIsTypingDone(true)
+                      })
+                      .start();
+                  }}
+                />
+                </Title>
+
+                {isTypingDone &&
+                  <motion.div
+                    animate={{y:5 , opacity: 1}}
+                    transition={{duration:1}}
+                    style={{
+                    opacity: 0,
+                    width: 300
+                    }}
+                  >
+                    <Typography className="content" color={"black"} variant="h8">
+                      {handleLength()}
+                    </Typography>
+                </motion.div>                 
+                }
+
               {todayBook.link && (
-                <Button
-                  color="primary"
-                  variant="soft"
+                <InfoBtn
+                  // color="primary"
+                  // variant="soft"
                   className="urlBtn"
                   onClick={() => {
                     window.open(todayBook.link);
                   }}
                 >
+                  <ExitToAppIcon fontSize="small"/>
                   책 정보
-                </Button>
+                </InfoBtn>
               )}
             </div>
           </div>
         </BannerSection>
-      </>
+        </motion.div>
+        
+      </div>
     );
   }
   
@@ -153,6 +209,15 @@ const Title = styled(Typography)`
     word-break: keep-all;
     margin-bottom: 50px;
     line-height: 36px;
+  }
+
+  @media (max-width: 480px){
+    
+  &.title{
+    line-height: 30px;
+    letter-spacing: -0.5px;
+    color: #1a1a1a;
+  }
   }
 `;
 
@@ -255,3 +320,20 @@ const BannerSection = styled.div`
     }
   }
 `;
+
+
+const InfoBtn = styled(Button)`
+  background-color: transparent;
+  color: #1f1f1f;
+
+  & svg{
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+  }
+  
+  &:hover{
+    background-color: dodgerblue;
+    color: #fff;
+  }
+`
